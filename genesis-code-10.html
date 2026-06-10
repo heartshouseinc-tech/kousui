@@ -1,0 +1,2975 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f5f0e8">
+<title>GENESIS CODE — 香り×DNA戦略AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f0e8;--bg2:#fdfaf4;--bg3:#ede8dc;
+  --sur:#ffffff;--sur2:#faf7f1;--sur3:#f0ebe0;
+  --gold:#b8820a;--gold-l:#d4a017;--gold-xl:#fdf4dc;--gold-glow:rgba(184,130,10,.18);
+  --rose:#c2547a;--rose-l:#d96b8a;--rose-xl:#fce8f0;
+  --teal:#0e8fa0;--teal-l:#12afc4;--teal-xl:#e0f7fa;
+  --sage:#3a8a4e;--sage-xl:#e8f5ec;
+  --amb:#b86020;--amb-xl:#fff0e4;
+  --vio:#7c50c0;--vio-xl:#f0eafc;
+  --txt:#1a1510;--txt2:#6b5f50;--txt3:#a89880;
+  --bor:rgba(100,80,40,.12);--bor2:rgba(100,80,40,.2);
+  --sh:0 2px 12px rgba(100,80,40,.1);--sh-lg:0 8px 32px rgba(100,80,40,.18);
+  --r1:10px;--r2:14px;--r3:18px;--r4:24px;--rf:9999px;
+  --fd:"Cormorant Garamond",serif;--fu:"Barlow Condensed",sans-serif;--fb:"Noto Sans JP",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:var(--bg);}
+body{color:var(--txt);font-family:var(--fb);font-size:13px;-webkit-font-smoothing:antialiased;}
+@supports(-webkit-touch-callout:none){.app{height:-webkit-fill-available;}}
+.app{position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;}
+button{border:none;cursor:pointer;font-family:var(--fb);-webkit-tap-highlight-color:transparent;outline:none;}
+input,textarea{font-family:var(--fb);outline:none;}
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-thumb{background:var(--bor2);border-radius:1px;}
+
+/* ─── TAB BAR ─── */
+.tab-bar{display:flex;background:var(--sur);border-top:1px solid var(--bor);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -2px 12px rgba(100,80,40,.1);}
+.tab-btn{flex:1;padding:9px 0 7px;background:none;border:none;color:var(--txt3);font-family:var(--fb);font-size:9px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .18s;position:relative;}
+.tab-btn::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:0 0 3px 3px;transition:width .22s;}
+.tab-btn.active{color:var(--gold);}
+.tab-btn.active::after{width:28px;}
+.tab-btn .ti{font-size:18px;line-height:1;}
+
+/* ─── PAGES ─── */
+.pages{flex:1;overflow:hidden;position:relative;}
+.page{position:absolute;inset:0;overflow-y:auto;display:none;padding-bottom:20px;}
+.page.active{display:block;animation:pfade .22s ease both;}
+@keyframes pfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ─── HEADER ─── */
+.page-header{background:linear-gradient(150deg,#fdf8ef 0%,#faf2e4 60%,#f0f8f5 100%);padding:14px 16px 13px;margin-bottom:10px;position:relative;overflow:hidden;border-bottom:1px solid var(--bor);}
+.page-header::before{content:'';position:absolute;right:-30px;top:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(184,130,10,.12),transparent 70%);}
+.page-header::after{content:'';position:absolute;left:-20px;bottom:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(14,143,160,.08),transparent 70%);}
+.hd-en{font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:5px;color:var(--gold);margin-bottom:3px;position:relative;}
+.hd-title{font-family:var(--fu);font-size:22px;font-weight:900;color:var(--txt);letter-spacing:1px;margin-bottom:5px;position:relative;}
+.hd-title em{color:var(--gold);font-style:normal;}
+.hd-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;position:relative;}
+.hd-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:var(--rf);font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:.5px;}
+.b-gem{background:rgba(124,80,192,.1);color:var(--vio);border:1px solid rgba(124,80,192,.2);}
+.b-srch{background:rgba(14,143,160,.1);color:var(--teal);border:1px solid rgba(14,143,160,.18);}
+.b-live{background:rgba(184,130,10,.12);color:var(--gold);border:1px solid rgba(184,130,10,.2);}
+.b-dna{background:rgba(194,84,122,.1);color:var(--rose);border:1px solid rgba(194,84,122,.18);}
+
+/* ─── SECTION ─── */
+.sec{background:var(--sur);border-radius:var(--r3);padding:13px 14px;margin:0 12px 10px;box-shadow:var(--sh);border:1px solid var(--bor);}
+.sec-t{font-family:var(--fu);font-size:10px;font-weight:700;color:var(--txt2);letter-spacing:2px;text-transform:uppercase;margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+.sec-icon{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;background:var(--gold-xl);flex-shrink:0;}
+
+/* ─── MAIN SEARCH BTN ─── */
+.ikigeki-area{padding:0 12px;margin-bottom:10px;}
+.ikigeki-main{width:100%;padding:17px 16px;background:linear-gradient(135deg,#c9952a,#e8b84b,#c97a2a);border:none;border-radius:var(--r3);color:#0d0d1a;font-family:var(--fu);font-size:16px;font-weight:900;cursor:pointer;letter-spacing:2px;box-shadow:0 6px 28px rgba(201,149,42,.45);transition:all .18s;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:9px;}
+.ikigeki-main:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(201,149,42,.55);}
+.ikigeki-main:active{transform:translateY(0);}
+.ikigeki-main:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.ik-icon{font-size:22px;}
+
+/* ─── PRESET GRID ─── */
+.preset-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;}
+.preset-sm{padding:9px 5px;border-radius:var(--r2);background:var(--sur);border:1.5px solid var(--bor);color:var(--txt2);font-family:var(--fb);font-size:9px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center;line-height:1.45;box-shadow:var(--sh);}
+.preset-sm:hover{transform:translateY(-1px);box-shadow:var(--sh-lg);}
+.preset-sm:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.preset-sm .ps-icon{font-size:16px;display:block;margin-bottom:2px;}
+.ps-gold{border-color:rgba(184,130,10,.3);color:var(--gold);background:var(--gold-xl);}
+.ps-rose{border-color:rgba(194,84,122,.3);color:var(--rose);background:var(--rose-xl);}
+.ps-teal{border-color:rgba(14,143,160,.25);color:var(--teal);background:var(--teal-xl);}
+.ps-sage{border-color:rgba(58,138,78,.25);color:var(--sage);background:var(--sage-xl);}
+.ps-vio{border-color:rgba(124,80,192,.25);color:var(--vio);background:var(--vio-xl);}
+.ps-amb{border-color:rgba(184,96,32,.25);color:var(--amb);background:var(--amb-xl);}
+
+/* ─── CUSTOM INPUT ─── */
+.custom-row{display:flex;gap:7px;}
+.custom-input{flex:1;background:var(--sur);border:1.5px solid var(--bor2);border-radius:var(--r2);color:var(--txt);font-family:var(--fb);font-size:12px;padding:10px 13px;transition:border-color .15s;}
+.custom-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
+.custom-input::placeholder{color:var(--txt3);}
+.custom-go{padding:10px 16px;background:linear-gradient(135deg,var(--teal),var(--teal-l));border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-size:13px;font-weight:800;cursor:pointer;letter-spacing:1px;box-shadow:0 3px 12px rgba(14,143,160,.25);transition:all .15s;white-space:nowrap;}
+.custom-go:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ─── RESULT CARDS ─── */
+.result-wrap{margin:0 12px 10px;}
+.result-title{font-family:var(--fu);font-size:11px;font-weight:700;color:var(--txt2);letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;padding:0 2px;}
+.res-count{background:var(--gold-xl);color:var(--gold-l);border:1px solid rgba(201,149,42,.25);border-radius:var(--rf);padding:2px 10px;font-size:10px;font-weight:800;}
+
+.scent-card{background:var(--sur);border-radius:var(--r3);padding:14px;margin-bottom:9px;border:1.5px solid var(--bor);box-shadow:var(--sh);cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.scent-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--r3) 0 0 var(--r3);}
+.scent-card.rank-S::before{background:linear-gradient(180deg,var(--gold-l),var(--gold));}
+.scent-card.rank-A::before{background:linear-gradient(180deg,var(--rose-l),var(--rose));}
+.scent-card.rank-B::before{background:linear-gradient(180deg,var(--teal-l),var(--teal));}
+.scent-card.rank-C::before{background:var(--txt3);}
+.scent-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg);border-color:rgba(184,130,10,.3);}
+.scent-card.expanded{border-color:rgba(184,130,10,.4);box-shadow:0 6px 24px rgba(184,130,10,.12);}
+
+.sc-header{display:flex;align-items:center;gap:10px;}
+.sc-rank{font-family:var(--fu);font-size:22px;font-weight:900;width:30px;flex-shrink:0;}
+.sc-rank.S{color:var(--gold);}
+.sc-rank.A{color:var(--rose);}
+.sc-rank.B{color:var(--teal);}
+.sc-rank.C{color:var(--txt3);}
+.sc-info{flex:1;min-width:0;}
+.sc-brand{font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;}
+.sc-name{font-family:var(--fd);font-size:16px;font-weight:600;color:var(--txt);line-height:1.2;margin-top:1px;}
+.sc-type{font-size:10px;color:var(--txt2);margin-top:3px;}
+.sc-score-wrap{text-align:right;flex-shrink:0;}
+.sc-score{font-family:var(--fu);font-size:26px;font-weight:900;line-height:1;color:var(--gold);}
+.sc-score-lbl{font-family:var(--fu);font-size:9px;color:var(--txt3);letter-spacing:1px;}
+.sc-arrow{font-size:14px;color:var(--txt3);transition:transform .22s;flex-shrink:0;}
+.scent-card.expanded .sc-arrow{transform:rotate(90deg);}
+
+/* ─── DETAIL PANEL ─── */
+.sc-detail{display:none;margin-top:13px;padding-top:13px;border-top:1px solid var(--bor);}
+.scent-card.expanded .sc-detail{display:block;}
+
+.pyramid{background:var(--bg3);border-radius:var(--r2);padding:12px;margin-bottom:10px;border:1px solid var(--bor);}
+.pyr-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.pyr-row:last-child{margin-bottom:0;}
+.pyr-lbl{font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;padding:2px 8px;border-radius:var(--rf);flex-shrink:0;width:42px;text-align:center;}
+.pyr-top{background:var(--gold-xl);color:var(--gold);border:1px solid rgba(184,130,10,.25);}
+.pyr-mid{background:var(--rose-xl);color:var(--rose);border:1px solid rgba(194,84,122,.2);}
+.pyr-base{background:var(--teal-xl);color:var(--teal);border:1px solid rgba(14,143,160,.2);}
+.pyr-notes{font-size:11px;color:var(--txt2);line-height:1.65;flex:1;}
+
+.mol-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
+.mol-tag{font-family:var(--fu);font-size:9px;font-weight:700;padding:2px 9px;border-radius:var(--rf);background:var(--bg3);color:var(--txt2);border:1px solid var(--bor2);}
+
+.usage-box{background:linear-gradient(135deg,var(--gold-xl),var(--sur2));border-radius:var(--r2);padding:12px;margin-bottom:10px;border:1px solid rgba(184,130,10,.15);}
+.usage-title{font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.usage-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.usage-item{background:var(--sur);border-radius:var(--r1);padding:8px;border:1px solid var(--bor);}
+.usage-k{font-family:var(--fu);font-size:8px;font-weight:700;letter-spacing:1px;color:var(--txt3);margin-bottom:3px;}
+.usage-v{font-size:11px;color:var(--txt);font-weight:700;}
+
+.layer-box{background:linear-gradient(135deg,var(--rose-xl),var(--teal-xl));border-radius:var(--r2);padding:13px;margin-bottom:10px;border:1px solid rgba(194,84,122,.15);}
+.layer-title{font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--rose);margin-bottom:9px;}
+.layer-item{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.layer-item:last-child{margin-bottom:0;}
+.layer-type{font-family:var(--fu);font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--rf);flex-shrink:0;}
+.lt-base{background:var(--teal-xl);color:var(--teal);border:1px solid rgba(14,143,160,.2);}
+.lt-over{background:var(--gold-xl);color:var(--gold);border:1px solid rgba(184,130,10,.2);}
+.lt-boost{background:var(--rose-xl);color:var(--rose);border:1px solid rgba(194,84,122,.2);}
+.layer-desc{font-size:11px;color:var(--txt);flex:1;}
+
+.neuro-box{background:var(--vio-xl);border-radius:var(--r2);padding:12px;margin-bottom:10px;border:1px solid rgba(124,80,192,.15);}
+.neuro-title{font-family:var(--fu);font-size:9px;letter-spacing:2px;font-weight:700;color:var(--vio);margin-bottom:7px;}
+.neuro-text{font-size:11px;color:var(--txt2);line-height:1.75;}
+
+.ai-comment{background:linear-gradient(135deg,var(--gold-xl),rgba(184,130,10,.06));border:1.5px solid rgba(184,130,10,.18);border-radius:var(--r2);padding:12px;margin-bottom:10px;}
+.ai-comment-lbl{font-family:var(--fu);font-size:9px;color:var(--gold);font-weight:700;letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:4px;}
+.ai-comment-lbl::before{content:'✦';}
+.ai-comment-body{font-size:11px;color:var(--txt);line-height:1.85;}
+
+/* ─── SCENE TAGS ─── */
+.scene-wrap{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
+.scene-tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--rf);}
+.st-good{background:var(--sage-xl);color:var(--sage);border:1px solid rgba(106,184,122,.25);}
+.st-bad{background:var(--rose-xl);color:var(--rose-l);border:1px solid rgba(194,84,122,.2);}
+.scene-lbl{font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt3);margin-bottom:4px;}
+
+/* ─── HORMONE METER ─── */
+.hormone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:10px;}
+.hormone-card{background:var(--sur2);border-radius:var(--r2);padding:10px;border:1px solid var(--bor);text-align:center;}
+.hm-icon{font-size:20px;margin-bottom:4px;}
+.hm-name{font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt3);margin-bottom:6px;}
+.hm-bar-wrap{background:var(--bg3);border-radius:var(--rf);height:6px;overflow:hidden;margin-bottom:4px;}
+.hm-bar{height:100%;border-radius:var(--rf);transition:width .6s ease;}
+.hm-val{font-family:var(--fu);font-size:14px;font-weight:800;color:var(--txt);}
+.hm-label{font-size:9px;color:var(--txt3);margin-top:2px;}
+
+/* ─── RADAR BARS ─── */
+.rbar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.rbar-lbl{font-family:var(--fb);font-size:9px;color:var(--txt2);width:40px;flex-shrink:0;}
+.rbar-t{flex:1;background:var(--bg3);border-radius:var(--rf);height:5px;overflow:hidden;}
+.rbar-fi{height:100%;border-radius:var(--rf);background:linear-gradient(90deg,var(--gold),var(--gold-l));transition:width .5s ease;}
+
+/* ─── CHAT ─── */
+.chat-wrap{height:220px;overflow-y:auto;margin-bottom:10px;padding:4px;}
+.msg{display:flex;gap:7px;margin-bottom:10px;}
+.msg.user{flex-direction:row-reverse;}
+.msg-av{width:27px;height:27px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px;}
+.av-ai{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;}
+.av-user{background:var(--bg3);border:1.5px solid var(--bor2);}
+.msg-bubble{max-width:83%;padding:9px 12px;border-radius:11px;font-size:11px;line-height:1.8;}
+.msg.ai .msg-bubble{background:var(--bg3);border:1px solid var(--bor);}
+.msg.user .msg-bubble{background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;font-weight:700;}
+.chat-row{display:flex;gap:7px;}
+.chat-inp{flex:1;background:var(--bg3);border:1.5px solid var(--bor2);border-radius:var(--r2);color:var(--txt);font-size:12px;padding:9px 12px;}
+.chat-inp:focus{border-color:var(--gold);background:var(--sur);}
+.chat-inp::placeholder{color:var(--txt3);}
+.send-btn{padding:9px 15px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-weight:900;font-size:13px;cursor:pointer;letter-spacing:1px;transition:all .15s;}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ─── LOADING ─── */
+.loading-card{background:var(--sur);border-radius:var(--r3);padding:28px 20px;margin:0 12px;box-shadow:var(--sh);border:1px solid var(--bor);text-align:center;}
+.loading-orb{font-size:38px;animation:orb 1.2s ease-in-out infinite;}
+@keyframes orb{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.15);opacity:1;filter:drop-shadow(0 0 10px var(--gold));}}
+.loading-text{font-size:12px;color:var(--txt2);margin-top:12px;line-height:1.75;}
+.loading-step{font-family:var(--fu);font-size:11px;color:var(--gold);font-weight:700;margin-top:7px;letter-spacing:1px;}
+
+/* ─── STATS BAR ─── */
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 12px 10px;}
+.stat-card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r2);padding:11px;text-align:center;box-shadow:var(--sh);}
+.stn{font-family:var(--fu);font-size:26px;color:var(--gold);line-height:1;font-weight:900;}
+.stl{font-family:var(--fu);font-size:9px;color:var(--txt3);margin-top:2px;font-weight:700;letter-spacing:1px;}
+
+/* ─── HISTORY ─── */
+.hist-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--sur);border-radius:var(--r2);margin:0 12px 6px;border:1px solid var(--bor);font-size:11px;box-shadow:var(--sh);}
+.hr-res{font-family:var(--fu);font-size:9px;font-weight:800;padding:3px 8px;border-radius:5px;flex-shrink:0;letter-spacing:1px;}
+.hr-good{background:var(--sage-xl);color:var(--sage);border:1px solid rgba(58,138,78,.2);}
+.hr-info{flex:1;min-width:0;}
+.hr-name{font-weight:700;font-size:12px;}
+.hr-meta{font-size:9px;color:var(--txt3);margin-top:1px;}
+.hr-rank{font-family:var(--fu);font-size:18px;font-weight:900;flex-shrink:0;}
+.insight-card{background:var(--vio-xl);border:1px solid rgba(124,80,192,.15);border-radius:var(--r2);padding:13px;margin:0 12px 10px;font-size:12px;line-height:1.85;color:var(--txt);}
+.ins-lbl{font-family:var(--fu);font-size:9px;color:var(--vio);font-weight:700;letter-spacing:2px;margin-bottom:7px;}
+
+/* ─── MISC ─── */
+.empty{text-align:center;padding:28px 0;color:var(--txt3);font-size:12px;}
+.empty-i{font-size:32px;margin-bottom:8px;}
+.loader{display:inline-block;width:14px;height:14px;border:2px solid rgba(184,130,10,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+.loader-d{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.1);border-top-color:var(--txt2);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.typing{display:inline-block;width:6px;height:13px;background:var(--gold);border-radius:2px;animation:blink .65s infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.main-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-size:14px;font-weight:900;cursor:pointer;letter-spacing:1.5px;box-shadow:0 4px 16px rgba(184,130,10,.3);transition:all .15s;margin-bottom:8px;}
+.main-btn:hover{transform:translateY(-1px);}
+.sub-btn{width:100%;padding:10px;background:var(--bg3);border:1.5px solid var(--bor2);border-radius:var(--r2);color:var(--txt2);font-family:var(--fu);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:1px;}
+.sub-btn:disabled{opacity:.4;cursor:not-allowed;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fl{font-size:10px;color:var(--txt2);margin-bottom:4px;font-weight:700;}
+.sc-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bor);}
+.sc-row:last-child{border-bottom:none;}
+.sc-row input{width:62px;background:var(--bg3);border:1px solid var(--bor2);border-radius:7px;color:var(--txt);padding:5px 8px;font-family:var(--fu);font-size:12px;font-weight:700;text-align:center;}
+.sc-row input:focus{border-color:var(--gold);}
+
+/* ─── INFO TAB SPECIFIC ─── */
+.trend-card{background:var(--sur);border-radius:var(--r3);padding:13px 14px;margin:0 12px 9px;border:1px solid var(--bor);box-shadow:var(--sh);position:relative;overflow:hidden;cursor:pointer;transition:all .18s;}
+.trend-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg);}
+.trend-card.expanded .sc-arrow{transform:rotate(90deg);}
+.trend-header{display:flex;align-items:center;gap:10px;}
+.trend-icon{width:42px;height:42px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.trend-info{flex:1;}
+.trend-name{font-family:var(--fd);font-size:15px;font-weight:600;color:var(--txt);}
+.trend-sub{font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt3);margin-top:2px;text-transform:uppercase;}
+.trend-detail{display:none;margin-top:11px;padding-top:11px;border-top:1px solid var(--bor);}
+.trend-card.expanded .trend-detail{display:block;}
+
+/* ─── WORLD NEWS AREA ─── */
+.news-grid{display:flex;flex-direction:column;gap:8px;}
+.news-item{background:var(--sur);border-radius:var(--r2);padding:11px;border:1px solid var(--bor);}
+.news-cat{font-family:var(--fu);font-size:8px;font-weight:800;letter-spacing:2px;color:var(--gold);margin-bottom:4px;text-transform:uppercase;}
+.news-title{font-size:12px;font-weight:700;color:var(--txt);margin-bottom:4px;line-height:1.4;}
+.news-body{font-size:10px;color:var(--txt2);line-height:1.75;}
+
+/* ─── QUICK LINKS ─── */
+.qlinks{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.qlink{padding:5px 10px;border-radius:var(--rf);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;border:1px solid var(--bor2);background:var(--sur2);color:var(--txt2);transition:all .15s;letter-spacing:.5px;}
+.qlink:hover{border-color:var(--gold);color:var(--gold-l);background:var(--gold-xl);}
+
+/* ─── DNA SCORE ─── */
+.dna-score-ring{display:flex;justify-content:center;margin:12px 0;}
+.dna-ring-wrap{position:relative;width:100px;height:100px;}
+.dna-ring-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.dna-ring-num{font-family:var(--fu);font-size:30px;font-weight:900;color:var(--gold-l);line-height:1;}
+.dna-ring-lbl{font-family:var(--fu);font-size:9px;font-weight:700;color:var(--txt3);letter-spacing:1.5px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="pages">
+
+    <!-- ════════ PAGE 1: ANALYZE ════════ -->
+    <div class="page active" id="page-main">
+      <div class="page-header">
+        <div class="hd-en">GENESIS CODE — SCENT × DNA STRATEGY</div>
+        <div class="hd-title">🧬 <em>香り戦略</em> 一撃解析</div>
+        <div class="hd-meta">
+          <span class="hd-badge b-gem">◆ Gemini 2.5 Flash</span>
+          <span class="hd-badge b-srch">🔍 Web検索</span>
+          <span class="hd-badge b-live">⚡ リアルタイム</span>
+          <span class="hd-badge b-dna">🧬 DNA戦略</span>
+        </div>
+        <!-- 接続ステータスバー -->
+        <div id="conn-bar" style="margin-top:8px;padding:5px 10px;border-radius:var(--rf);font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1px;display:inline-flex;align-items:center;gap:5px;background:var(--bg3);color:var(--txt3);border:1px solid var(--bor);">
+          <span id="conn-dot" style="width:7px;height:7px;border-radius:50%;background:var(--txt3);display:inline-block;"></span>
+          <span id="conn-text">接続確認中...</span>
+        </div>
+      </div>
+
+      <!-- ダッシュボード -->
+      <div id="dashboard-area"></div>
+
+      <div class="ikigeki-area">
+        <!-- メインボタン -->
+        <button class="ikigeki-main" id="main-btn" onclick="runAnalyze('full_strategy')">
+          <span class="ik-icon">🧬</span>
+          今日の最強香り戦略を一撃解析
+        </button>
+
+        <!-- プリセット6種 -->
+        <div class="preset-row">
+          <button class="preset-sm ps-rose" onclick="runAnalyze('date')">
+            <span class="ps-icon">❤️</span>デート・恋愛
+          </button>
+          <button class="preset-sm ps-gold" onclick="runAnalyze('business')">
+            <span class="ps-icon">💼</span>仕事・商談
+          </button>
+          <button class="preset-sm ps-teal" onclick="runAnalyze('first_meet')">
+            <span class="ps-icon">✨</span>初対面最強
+          </button>
+          <button class="preset-sm ps-vio" onclick="runAnalyze('mhc')">
+            <span class="ps-icon">🧬</span>MHC遺伝最適
+          </button>
+          <button class="preset-sm ps-sage" onclick="runAnalyze('testosterone')">
+            <span class="ps-icon">💪</span>T値最大化
+          </button>
+          <button class="preset-sm ps-amb" onclick="runAnalyze('leader')">
+            <span class="ps-icon">👑</span>リーダー印象
+          </button>
+        </div>
+
+        <!-- カスタム入力 -->
+        <div class="custom-row">
+          <input class="custom-input" id="custom-input" type="text"
+            placeholder="例：「35歳・筋トレ後の夜デート向け香水3選」"
+            onkeydown="if(event.key==='Enter')runCustom()">
+          <button class="custom-go" id="custom-go-btn" onclick="runCustom()">🔍</button>
+        </div>
+      </div>
+
+      <div id="result-main"></div>
+    </div>
+
+    <!-- ════════ PAGE 2: INFO ════════ -->
+    <div class="page" id="page-info">
+      <div class="page-header">
+        <div class="hd-en">WORLD FRAGRANCE INTELLIGENCE</div>
+        <div class="hd-title">🌍 <em>香水情報</em> リアルタイム</div>
+        <div class="hd-meta">
+          <span class="hd-badge b-gem">◆ Gemini 2.5 Flash</span>
+          <span class="hd-badge b-srch">🔍 Google検索</span>
+          <span class="hd-badge b-live">🔗 URL解析</span>
+        </div>
+      </div>
+
+      <div class="ikigeki-area">
+        <!-- 検索モード切替 -->
+        <div style="display:flex;gap:5px;margin-bottom:8px;">
+          <button id="mode-search-btn" onclick="setInfoMode('search')" style="flex:1;padding:7px;border-radius:9px;background:var(--gold-xl);border:1.5px solid rgba(184,130,10,.35);color:var(--gold);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:.5px;">🔍 Google検索</button>
+          <button id="mode-url-btn" onclick="setInfoMode('url')" style="flex:1;padding:7px;border-radius:9px;background:var(--bg3);border:1.5px solid var(--bor);color:var(--txt3);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:.5px;">🔗 URL解析</button>
+          <button id="mode-both-btn" onclick="setInfoMode('both')" style="flex:1;padding:7px;border-radius:9px;background:var(--bg3);border:1.5px solid var(--bor);color:var(--txt3);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:.5px;">⚡ 両方</button>
+        </div>
+
+        <button class="ikigeki-main" id="info-main-btn" onclick="runInfo('world_trends')">
+          <span class="ik-icon">🌍</span>
+          世界香水トレンドを今すぐ検索
+        </button>
+        <div class="preset-row">
+          <button class="preset-sm ps-gold" onclick="runInfo('new_releases')">
+            <span class="ps-icon">🆕</span>新作・新発売
+          </button>
+          <button class="preset-sm ps-rose" onclick="runInfo('popular_japan')">
+            <span class="ps-icon">🇯🇵</span>日本人気TOP
+          </button>
+          <button class="preset-sm ps-teal" onclick="runInfo('niche_world')">
+            <span class="ps-icon">💎</span>世界ニッチ
+          </button>
+          <button class="preset-sm ps-vio" onclick="runInfo('molecule_science')">
+            <span class="ps-icon">🔬</span>香料分子科学
+          </button>
+          <button class="preset-sm ps-sage" onclick="runInfo('season_now')">
+            <span class="ps-icon">🍂</span>今季おすすめ
+          </button>
+          <button class="preset-sm ps-amb" onclick="runInfo('price_range')">
+            <span class="ps-icon">💰</span>価格帯別ベスト
+          </button>
+        </div>
+        <div class="custom-row">
+          <input class="custom-input" id="info-custom-input" type="text"
+            placeholder="例：「2025年秋冬 男性香水 人気ランキング」"
+            onkeydown="if(event.key==='Enter')runInfoCustom()">
+          <button class="custom-go" onclick="runInfoCustom()">🔍</button>
+        </div>
+
+        <!-- URL解析パネル（URLモード時に表示） -->
+        <div id="url-panel" style="display:none;margin-top:6px;">
+          <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt3);margin-bottom:5px;">▶ 解析するURLを入力（最大3件）</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:7px;">
+            <div class="custom-row">
+              <input class="custom-input" id="url-input-1" type="url" placeholder="https://www.fragrantica.com/...">
+              <button onclick="pasteUrl(1)" style="padding:10px 11px;background:var(--sur2);border:1.5px solid var(--bor2);border-radius:var(--r2);color:var(--txt2);font-family:var(--fu);font-size:11px;cursor:pointer;">📋</button>
+            </div>
+            <div class="custom-row">
+              <input class="custom-input" id="url-input-2" type="url" placeholder="https://www.basenotes.net/...（任意）">
+              <button onclick="pasteUrl(2)" style="padding:10px 11px;background:var(--sur2);border:1.5px solid var(--bor2);border-radius:var(--r2);color:var(--txt2);font-family:var(--fu);font-size:11px;cursor:pointer;">📋</button>
+            </div>
+            <div class="custom-row">
+              <input class="custom-input" id="url-input-3" type="url" placeholder="https://...（任意）">
+              <button onclick="pasteUrl(3)" style="padding:10px 11px;background:var(--sur2);border:1.5px solid var(--bor2);border-radius:var(--r2);color:var(--txt2);font-family:var(--fu);font-size:11px;cursor:pointer;">📋</button>
+            </div>
+          </div>
+          <div class="custom-row">
+            <input class="custom-input" id="url-question" type="text" placeholder="例：この香水のレビューと評価を日本語でまとめて"
+              onkeydown="if(event.key==='Enter')runUrlAnalysis()">
+            <button class="custom-go" onclick="runUrlAnalysis()">解析</button>
+          </div>
+          <!-- よく使うURL集 -->
+          <div style="margin-top:7px;">
+            <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--txt3);margin-bottom:4px;">よく使うサイト</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">
+              <button onclick="setQuickUrl('https://www.fragrantica.com')" style="padding:4px 9px;border-radius:var(--rf);background:var(--sur2);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;cursor:pointer;">Fragrantica</button>
+              <button onclick="setQuickUrl('https://www.basenotes.net')" style="padding:4px 9px;border-radius:var(--rf);background:var(--sur2);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;cursor:pointer;">Basenotes</button>
+              <button onclick="setQuickUrl('https://cosme.net')" style="padding:4px 9px;border-radius:var(--rf);background:var(--sur2);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;cursor:pointer;">@cosme</button>
+              <button onclick="setQuickUrl('https://www.amazon.co.jp')" style="padding:4px 9px;border-radius:var(--rf);background:var(--sur2);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;cursor:pointer;">Amazon JP</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="result-info"></div>
+    </div>
+
+    <!-- ════════ PAGE 2.5: BUSINESS WOMEN ════════ -->
+    <div class="page" id="page-biz">
+      <div class="page-header">
+        <div class="hd-en">BUSINESS WOMEN INTELLIGENCE — SCENT STRATEGY</div>
+        <div class="hd-title">💼 <em>取引先</em> 女性対応</div>
+        <div class="hd-meta">
+          <span class="hd-badge b-gem">◆ Gemini 2.5 Flash</span>
+          <span class="hd-badge b-live">⚡ 状況別即解析</span>
+        </div>
+      </div>
+
+      <!-- 状況入力 -->
+      <div class="sec">
+        <div class="sec-t"><span class="sec-icon">👩‍💼</span>取引先女性の状況を入力</div>
+        <div class="grid2" style="margin-bottom:10px;">
+          <div>
+            <div class="fl">相手の年齢層</div>
+            <select id="biz-age" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+              <option value="20s">20代</option>
+              <option value="30s" selected>30代</option>
+              <option value="40s">40代</option>
+              <option value="50s">50代以上</option>
+            </select>
+          </div>
+          <div>
+            <div class="fl">役職・立場</div>
+            <select id="biz-role" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+              <option value="staff">担当者</option>
+              <option value="manager">マネージャー</option>
+              <option value="director">部長・役員</option>
+              <option value="ceo">代表・社長</option>
+            </select>
+          </div>
+          <div>
+            <div class="fl">シーン</div>
+            <select id="biz-scene" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+              <option value="first">初対面・初回商談</option>
+              <option value="nego">交渉・クロージング</option>
+              <option value="relation">関係構築・ランチ</option>
+              <option value="present">プレゼン・提案</option>
+              <option value="party">会食・パーティー</option>
+            </select>
+          </div>
+          <div>
+            <div class="fl">環境</div>
+            <select id="biz-env" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+              <option value="indoor">屋内（冷暖房）</option>
+              <option value="outdoor">屋外・移動中</option>
+              <option value="restaurant">レストラン</option>
+              <option value="formal">フォーマル会場</option>
+            </select>
+          </div>
+        </div>
+        <!-- 業種・特記事項 -->
+        <div style="margin-bottom:10px;">
+          <div class="fl">業種・特記事項（任意）</div>
+          <input type="text" id="biz-note" placeholder="例：外資系金融・保守的な業界・初契約前"
+            style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 12px;font-size:12px;">
+        </div>
+        <button class="main-btn" style="margin-bottom:0;" onclick="runBizAnalysis()">
+          💼 取引先女性への最適香水をAI解析
+        </button>
+      </div>
+
+      <!-- プリセット（よくある状況） -->
+      <div style="padding:0 12px 4px;">
+        <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--txt3);margin-bottom:7px;">▶ よくある状況から即解析</div>
+        <div class="preset-row">
+          <button class="preset-sm ps-gold" onclick="runBizPreset('first_impression')">
+            <span class="ps-icon">✨</span>初対面<br>最強印象
+          </button>
+          <button class="preset-sm ps-teal" onclick="runBizPreset('negotiation')">
+            <span class="ps-icon">🤝</span>交渉・<br>クロージング
+          </button>
+          <button class="preset-sm ps-rose" onclick="runBizPreset('relationship')">
+            <span class="ps-icon">💎</span>関係構築<br>深化
+          </button>
+          <button class="preset-sm ps-vio" onclick="runBizPreset('executive')">
+            <span class="ps-icon">👑</span>女性役員<br>対応
+          </button>
+          <button class="preset-sm ps-sage" onclick="runBizPreset('conservative')">
+            <span class="ps-icon">🏦</span>保守的<br>業界
+          </button>
+          <button class="preset-sm ps-amb" onclick="runBizPreset('creative')">
+            <span class="ps-icon">🎨</span>クリエイティブ<br>業界
+          </button>
+        </div>
+      </div>
+
+      <!-- カスタム -->
+      <div style="padding:0 12px 10px;">
+        <div class="custom-row">
+          <input class="custom-input" id="biz-custom-input" type="text"
+            placeholder="例：「40代外資系女性役員との初回プレゼン」"
+            onkeydown="if(event.key==='Enter')runBizCustom()">
+          <button class="custom-go" onclick="runBizCustom()">🔍</button>
+        </div>
+      </div>
+
+      <!-- 知識カード -->
+      <div class="sec">
+        <div class="sec-t"><span class="sec-icon">🧠</span>取引先女性攻略の嗅覚科学</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="background:var(--gold-xl);border:1px solid rgba(184,130,10,.2);border-radius:10px;padding:10px 12px;">
+            <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--gold);margin-bottom:4px;">📊 信頼感形成の脳科学</div>
+            <div style="font-size:10px;color:var(--txt);line-height:1.75;">嗅覚は扁桃体に0.03秒で直達。サンダルウッドのα-サンタロールが副交感神経を賦活し「この人は安全」という無意識の判断を促進する。ベルガモットのリモネン+リナロールがコルチゾール低下→警戒心を解く。</div>
+          </div>
+          <div style="background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);border-radius:10px;padding:10px 12px;">
+            <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--teal);margin-bottom:4px;">⚠️ やってはいけないNG香水</div>
+            <div style="font-size:10px;color:var(--txt);line-height:1.75;">① 強すぎるオリエンタル・アウド系→攻撃的・圧迫感。② 過剰なフローラル甘系→軽薄な印象。③ スポーティ系アクア→ビジネスの場では緊張感欠如。④ 3プッシュ超→密室での不快感。</div>
+          </div>
+          <div style="background:var(--rose-xl);border:1px solid rgba(194,84,122,.15);border-radius:10px;padding:10px 12px;">
+            <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--rose);margin-bottom:4px;">💡 女性役員・意思決定者への特別戦略</div>
+            <div style="font-size:10px;color:var(--txt);line-height:1.75;">権威ある女性は香りへの感受性が高い。過剰な男性性をアピールする香りは逆効果。クリーン×ウッディ×ごくわずかなスパイスが「洗練された対等な相手」という認知を作る。Le Labo・Byredo系が最適解。</div>
+          </div>
+          <div style="background:var(--vio-xl);border:1px solid rgba(124,80,192,.15);border-radius:10px;padding:10px 12px;">
+            <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--vio);margin-bottom:4px;">🗓 月経周期フェーズ別の接し方</div>
+            <div style="font-size:10px;color:var(--txt);line-height:1.75;">🌱卵胞期→積極的な提案が刺さる。✨排卵期→嗅覚感度MAX・最重要商談に最適。🍂黄体期→安心感・実績重視の話し方に切替。⛈PMS期→短く・明確に・無理な締め付けは禁忌。周期タブと連動。</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="result-biz"></div>
+    </div>
+
+
+    <div class="page" id="page-hormone">
+      <div class="page-header">
+        <div class="hd-en">TESTOSTERONE × SCENT MATRIX</div>
+        <div class="hd-title">📊 <em>ホルモン</em> 最適化</div>
+        <div class="hd-meta">
+          <span class="hd-badge b-dna">🧬 生存戦略科学</span>
+        </div>
+      </div>
+
+      <!-- T値入力 -->
+      <div class="sec">
+        <div class="sec-t"><span class="sec-icon">💪</span>今日のT値状態を入力</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="fl">テストステロン推定レベル</div>
+            <input type="range" id="t-slider" min="0" max="100" value="60"
+              oninput="updateTmeter(this.value)"
+              style="width:100%;accent-color:var(--gold-l);cursor:pointer;">
+            <div style="display:flex;justify-content:space-between;font-family:var(--fu);font-size:9px;color:var(--txt3);margin-top:3px;">
+              <span>低</span><span id="t-val-lbl" style="color:var(--gold-l);font-weight:800;">60 / 100</span><span>高</span>
+            </div>
+          </div>
+          <div class="grid2">
+            <div>
+              <div class="fl">起床後（時間）</div>
+              <input type="number" id="t-wake" min="0" max="16" value="4"
+                style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+            </div>
+            <div>
+              <div class="fl">筋トレ（今日）</div>
+              <select id="t-gym" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+                <option value="none">なし</option>
+                <option value="light">軽め</option>
+                <option value="heavy">高強度</option>
+                <option value="post45">45分以内完了</option>
+              </select>
+            </div>
+            <div>
+              <div class="fl">睡眠時間</div>
+              <select id="t-sleep" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+                <option value="7">7〜8時間（最適）</option>
+                <option value="6">6時間</option>
+                <option value="5">5時間以下</option>
+                <option value="9">9時間以上</option>
+              </select>
+            </div>
+            <div>
+              <div class="fl">ストレス状態</div>
+              <select id="t-stress" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+                <option value="low">低（良好）</option>
+                <option value="mid">中程度</option>
+                <option value="high">高（要注意）</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button class="main-btn" onclick="runHormoneAnalysis()">🧬 ホルモン状態から最適香水をAI解析</button>
+      </div>
+
+      <!-- ホルモンメーター -->
+      <div class="sec">
+        <div class="sec-t"><span class="sec-icon">📊</span>ホルモンバランス推定</div>
+        <div class="hormone-grid" id="hormone-meter">
+          <div class="hormone-card">
+            <div class="hm-icon">⚡</div>
+            <div class="hm-name">TESTOSTERONE</div>
+            <div class="hm-bar-wrap"><div class="hm-bar" id="hm-t" style="width:60%;background:linear-gradient(90deg,var(--gold),var(--gold-l));"></div></div>
+            <div class="hm-val" id="hm-t-val">60</div>
+            <div class="hm-label">生存・性的魅力</div>
+          </div>
+          <div class="hormone-card">
+            <div class="hm-icon">🛡</div>
+            <div class="hm-name">CORTISOL</div>
+            <div class="hm-bar-wrap"><div class="hm-bar" id="hm-c" style="width:35%;background:linear-gradient(90deg,var(--rose),var(--rose-l));"></div></div>
+            <div class="hm-val" id="hm-c-val">35</div>
+            <div class="hm-label">ストレス指標</div>
+          </div>
+          <div class="hormone-card">
+            <div class="hm-icon">🤝</div>
+            <div class="hm-name">OXYTOCIN</div>
+            <div class="hm-bar-wrap"><div class="hm-bar" id="hm-o" style="width:55%;background:linear-gradient(90deg,var(--teal),var(--teal-l));"></div></div>
+            <div class="hm-val" id="hm-o-val">55</div>
+            <div class="hm-label">絆・信頼感</div>
+          </div>
+          <div class="hormone-card">
+            <div class="hm-icon">🎯</div>
+            <div class="hm-name">DOPAMINE</div>
+            <div class="hm-bar-wrap"><div class="hm-bar" id="hm-d" style="width:50%;background:linear-gradient(90deg,var(--vio),#c4a8f0);"></div></div>
+            <div class="hm-val" id="hm-d-val">50</div>
+            <div class="hm-label">報酬・魅力</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="result-hormone"></div>
+    </div>
+
+    <!-- ════════ PAGE 4: NEURO ════════ -->
+    <div class="page" id="page-neuro">
+      <div class="page-header">
+        <div class="hd-en">NEUROSCIENCE × HORMONE × SCENT STRATEGY</div>
+        <div class="hd-title">🧠 <em>脳科学</em> 図解</div>
+        <div class="hd-meta">
+          <span class="hd-badge b-gem">◆ Gemini 2.5 Flash</span>
+          <span class="hd-badge b-dna">🧬 最新研究</span>
+        </div>
+      </div>
+
+      <!-- 3段階ナビ -->
+      <div style="display:flex;gap:5px;padding:0 12px;margin-bottom:10px;">
+        <button id="neuro-tab-1" data-action="neuro-tab" data-tab="map"
+          style="flex:1;padding:8px 4px;border-radius:10px;background:var(--vio-xl);border:1.5px solid rgba(124,80,192,.3);color:var(--vio);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:.5px;">
+          🗺️ ①図解
+        </button>
+        <button id="neuro-tab-2" data-action="neuro-tab" data-tab="hormone"
+          style="flex:1;padding:8px 4px;border-radius:10px;background:var(--bg3);border:1.5px solid var(--bor);color:var(--txt3);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:.5px;">
+          ⚗️ ②ホルモン
+        </button>
+        <button id="neuro-tab-3" data-action="neuro-tab" data-tab="coach"
+          style="flex:1;padding:8px 4px;border-radius:10px;background:var(--bg3);border:1.5px solid var(--bor);color:var(--txt3);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;letter-spacing:.5px;">
+          🤖 ③AI相談
+        </button>
+      </div>
+
+      <!-- STEP1：図解 -->
+      <div id="neuro-panel-map">
+        <!-- Geminiリサーチ -->
+        <div class="sec">
+          <div class="sec-t"><span class="sec-icon">🔬</span>最新脳科学リサーチ</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px;">
+            <button class="preset-sm ps-vio" onclick="runNeuroResearch('androstenone')"><span class="ps-icon">🧪</span>アンドロステノン</button>
+            <button class="preset-sm ps-gold" onclick="runNeuroResearch('mhc')"><span class="ps-icon">🧬</span>MHC理論</button>
+            <button class="preset-sm ps-rose" onclick="runNeuroResearch('oxytocin')"><span class="ps-icon">🤝</span>オキシトシン</button>
+            <button class="preset-sm ps-teal" onclick="runNeuroResearch('amygdala')"><span class="ps-icon">⚡</span>扁桃体経路</button>
+            <button class="preset-sm ps-sage" onclick="runNeuroResearch('testosterone_scent')"><span class="ps-icon">💪</span>T値×香り</button>
+            <button class="preset-sm ps-amb" onclick="runNeuroResearch('pheromone_2025')"><span class="ps-icon">📡</span>最新研究2025</button>
+          </div>
+          <div class="custom-row">
+            <input class="custom-input" id="neuro-custom-input" type="text"
+              placeholder="例：嗅覚と記憶の海馬への影響"
+              onkeydown="if(event.key==='Enter')runNeuroCustom()">
+            <button class="custom-go" onclick="runNeuroCustom()">🔍</button>
+          </div>
+        </div>
+        <div id="neuro-research-result"></div>
+
+        <!-- インタラクティブ図解 -->
+        <div class="sec">
+          <div class="sec-t"><span class="sec-icon">🗺️</span>嗅覚→脳 神経経路マップ</div>
+          <div id="neuro-map-area"></div>
+        </div>
+      </div>
+
+      <!-- STEP2：ホルモン -->
+      <div id="neuro-panel-hormone" style="display:none;">
+        <div id="hormone-detail-area"></div>
+      </div>
+
+      <!-- STEP3：AIコーチ -->
+      <div id="neuro-panel-coach" style="display:none;">
+        <div class="sec">
+          <div class="sec-t"><span class="sec-icon">🤖</span>脳科学AIコーチに相談</div>
+          <div style="font-size:10px;color:var(--txt2);line-height:1.75;margin-bottom:10px;">あなたの状況を入力すると、最新の脳科学論文に基づいて最適な香水戦略をアドバイスします。</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;">
+            <div>
+              <div class="fl">今の目的・状況</div>
+              <textarea id="coach-situation" rows="3"
+                placeholder="例：明日大事な商談があって緊張しやすい。扁桃体を落ち着かせて前頭前野を最適化したい。相手は40代女性管理職。"
+                style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:9px 12px;font-size:11px;font-family:var(--fb);resize:vertical;line-height:1.7;"></textarea>
+            </div>
+            <div class="grid2">
+              <div>
+                <div class="fl">最も改善したいこと</div>
+                <select id="coach-goal" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+                  <option value="calm">扁桃体鎮静・緊張緩和</option>
+                  <option value="focus">前頭前野活性・集中力</option>
+                  <option value="attract">MHC増幅・性的魅力</option>
+                  <option value="trust">オキシトシン促進・信頼感</option>
+                  <option value="leader">テストステロン・権威感</option>
+                  <option value="memory">海馬・記憶定着</option>
+                </select>
+              </div>
+              <div>
+                <div class="fl">ホルモン状態</div>
+                <select id="coach-hormone" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+                  <option value="high_t">T値高め</option>
+                  <option value="low_t">T値低め</option>
+                  <option value="stressed">コルチゾール高</option>
+                  <option value="relaxed">リラックス中</option>
+                  <option value="unknown">わからない</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button onclick="runNeuroCoach()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--vio),#a07ae0);border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-size:14px;font-weight:900;cursor:pointer;letter-spacing:1px;box-shadow:0 4px 16px rgba(124,80,192,.35);">
+            🧠 脳科学AIコーチに相談する
+          </button>
+        </div>
+        <div id="neuro-coach-result"></div>
+      </div>
+    </div>
+
+    <!-- ════════ PAGE 5: HISTORY / CHAT ════════ -->
+    <div class="page" id="page-history">
+      <div class="page-header">
+        <div class="hd-en">HISTORY & AI ADVISOR</div>
+        <div class="hd-title">💬 <em>AI相談</em> 履歴</div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card"><div class="stn" id="st-total">0</div><div class="stl">TOTAL</div></div>
+        <div class="stat-card"><div class="stn" id="st-saved">0</div><div class="stl">SAVED</div></div>
+        <div class="stat-card"><div class="stn" id="st-score">-</div><div class="stl">TOP PT</div></div>
+      </div>
+
+      <div style="padding:0 12px 10px;">
+        <button class="sub-btn" id="hist-analyze-btn" onclick="analyzeHistory()">🤖 AI総合パターン分析</button>
+      </div>
+      <div id="insight-area"></div>
+      <div id="history-list"></div>
+
+      <div class="sec" style="margin-top:8px;">
+        <div class="sec-t"><span class="sec-icon">💬</span>AI香り戦略アドバイザー</div>
+        <div class="chat-wrap" id="chat-msgs">
+          <div class="msg ai">
+            <div class="msg-av av-ai">✦</div>
+            <div class="msg-bubble">GENESIS CODEへようこそ。テストステロン、香料分子、MHC理論、筋トレとの関係など何でも聞いてください。Gemini 2.5 Flashがリアルタイム検索で最新情報をお届けします。</div>
+          </div>
+        </div>
+        <div class="chat-row">
+          <input class="chat-inp" id="chat-input" type="text"
+            placeholder="例：「デートで使うべき香料分子は？」"
+            onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="send-btn" id="send-btn" onclick="sendChat()">送信</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ PAGE 6: CYCLE CALENDAR ════════ -->
+    <div class="page" id="page-cycle">
+      <div class="page-header">
+        <div class="hd-en">CYCLE × SCENT STRATEGY — FEMALE INTELLIGENCE</div>
+        <div class="hd-title">🌙 <em>周期</em> カレンダー</div>
+        <div class="hd-meta">
+          <span class="hd-badge b-dna">🩸 月経×香水戦略</span>
+          <span class="hd-badge b-srch">🌕 月相4パターン</span>
+        </div>
+      </div>
+
+      <!-- 周期入力 -->
+      <div class="sec" id="cycle-input-sec">
+        <div class="sec-t"><span class="sec-icon">📅</span>月経周期を入力</div>
+        <div class="grid2" style="margin-bottom:10px;">
+          <div>
+            <div class="fl">最終月経開始日</div>
+            <input type="date" id="cy-last"
+              style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+          </div>
+          <div>
+            <div class="fl">周期日数</div>
+            <select id="cy-len" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+              <option value="24">24日（短周期）</option>
+              <option value="25">25日</option>
+              <option value="26">26日</option>
+              <option value="27">27日</option>
+              <option value="28" selected>28日（最多・平均）</option>
+              <option value="29">29日</option>
+              <option value="30">30日</option>
+              <option value="31">31日</option>
+              <option value="32">32日</option>
+              <option value="33">33日</option>
+              <option value="35">35日（長周期）</option>
+            </select>
+          </div>
+          <div>
+            <div class="fl">月経日数</div>
+            <input type="number" id="cy-period" value="5" min="2" max="10"
+              style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+          </div>
+          <div>
+            <div class="fl">目的</div>
+            <select id="cy-purpose" style="width:100%;background:var(--sur);border:1.5px solid var(--bor2);border-radius:8px;color:var(--txt);padding:8px 10px;font-size:12px;">
+              <option value="self">自分用（恋愛戦略）</option>
+              <option value="partner">パートナー管理</option>
+              <option value="business">取引先女性対応</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:7px;margin-bottom:8px;">
+          <button class="main-btn" style="flex:1;margin-bottom:0;" onclick="applyCycleInput()">📅 カレンダーに反映</button>
+          <button onclick="clearCycleInput()" style="padding:10px 14px;background:var(--bg3);border:1.5px solid var(--bor2);border-radius:var(--r2);color:var(--txt2);font-family:var(--fu);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">クリア</button>
+        </div>
+        <button id="gemini-guess-btn" onclick="runGeminiCycleGuess()"
+          style="width:100%;padding:14px;background:linear-gradient(135deg,var(--vio),#a07ae0);border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-size:13px;font-weight:900;cursor:pointer;letter-spacing:1px;box-shadow:0 4px 16px rgba(124,80,192,.35);display:flex;align-items:center;justify-content:center;gap:8px;">
+          <span style="font-size:20px;">🤖</span>今日のフェーズをGemini推測→4パターン香水提案
+        </button>
+      </div>
+
+      <!-- Gemini推測結果（常時表示） -->
+      <div id="gemini-guess-result"></div>
+
+      <!-- 3方式選択パネル（常時表示） -->
+      <div id="cycle-no-input-area">
+
+        <!-- ① 月相4パターン -->
+        <div class="sec">
+          <div class="sec-t"><span class="sec-icon">🌕</span>月相4パターンから選択</div>
+          <div style="font-size:10px;color:var(--txt2);line-height:1.7;margin-bottom:9px;">開始日不明でも月相から周期を推定。タップで即反映＋カレンダー表示。</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;" id="moon-pattern-cards"></div>
+        </div>
+
+        <!-- ② 日本女性月経周期TOP10 -->
+        <div class="sec">
+          <div class="sec-t"><span class="sec-icon">🇯🇵</span>日本女性の月経周期TOP10から選択</div>
+          <div style="font-size:10px;color:var(--txt2);line-height:1.7;margin-bottom:9px;">産婦人科学会データより。周期日数を選ぶと今日のフェーズを推定表示。</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;" id="japan-top10-cards"></div>
+        </div>
+
+      </div>
+
+      <!-- カレンダー本体 -->
+      <div id="cycle-calendar-area"></div>
+
+      <!-- フェーズ診断パネル -->
+      <div id="cycle-phase-panel"></div>
+
+      <!-- 香水提案エリア -->
+      <div id="cycle-scent-area"></div>
+    </div>
+
+  </div><!-- /pages -->
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-main" onclick="showPage('main')"><span class="ti">🧬</span>解析</button>
+    <button class="tab-btn" id="tab-info" onclick="showPage('info')"><span class="ti">🌍</span>情報</button>
+    <button class="tab-btn" id="tab-biz" onclick="showPage('biz')"><span class="ti">💼</span>取引先</button>
+    <button class="tab-btn" id="tab-cycle" onclick="showPage('cycle');initCycle()"><span class="ti">🌙</span>周期</button>
+    <button class="tab-btn" id="tab-hormone" onclick="showPage('hormone')"><span class="ti">📊</span>ホルモン</button>
+    <button class="tab-btn" id="tab-neuro" onclick="showPage('neuro');initNeuroCards()"><span class="ti">🧠</span>脳科学</button>
+    <button class="tab-btn" id="tab-history" onclick="showPage('history')"><span class="ti">💬</span>相談</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  CONFIG — fukusho-v8と同一アーキテクチャ
+// ═══════════════════════════════════════════
+var FUNCTIONS_BASE = (location.hostname==='localhost'||location.hostname==='127.0.0.1')
+  ? 'http://localhost:5001/kensetsu-nippo-842a2/us-central1'
+  : 'https://us-central1-kensetsu-nippo-842a2.cloudfunctions.net';
+const ACCESS_KEY = 'HH-2026-kensetsu-daiku';
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let historyData = JSON.parse(localStorage.getItem('gc_history')||'[]');
+
+// ═══════════════════════════════════════════
+//  AI呼び出し — Gemini 2.5 Flash 完全版
+//  useSearch: Google Search Grounding
+//  useUrl:    URL Context（URLを渡してリアルタイム取得）
+//  useSearch+useUrl 両方ONで最強モード
+// ═══════════════════════════════════════════
+async function callAI(prompt, useSearch=true, useUrl=false, urls=[]){
+  const body = {
+    prompt,
+    model: 'gemini-2.5-flash',
+    useSearch,
+    useUrl: useUrl || (urls && urls.length>0),
+  };
+  if(urls && urls.length>0) body.urls = urls;
+
+  const r = await fetch(FUNCTIONS_BASE+'/askClaude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Access-Key':ACCESS_KEY},
+    body:JSON.stringify(body)
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error('AI通信エラー: '+(e?.error?.message||r.status));}
+  const d=await r.json();
+  return d?.candidates?.[0]?.content?.parts?.[0]?.text||d?.text||d?.result||'応答なし';
+}
+
+// 検索モード定数
+const AI_MODE = {
+  FULL:   {useSearch:true,  useUrl:false},  // Google検索のみ（標準）
+  URL:    {useSearch:false, useUrl:true},   // URL指定取得
+  BOTH:   {useSearch:true,  useUrl:true},   // 両方（最強・低速）
+  FAST:   {useSearch:false, useUrl:false},  // 検索なし（高速）
+};
+
+// URL指定でAI解析する便利関数
+async function callAIwithURL(prompt, urlList){
+  return callAI(prompt, true, true, urlList);
+}
+
+// ═══════════════════════════════════════════
+//  JSONパース（fukusho-v8と同一）
+// ═══════════════════════════════════════════
+function parseJSON(resp){
+  try{
+    const s=resp.indexOf('{'), e=resp.lastIndexOf('}');
+    if(s===-1||e===-1)throw new Error('no json');
+    return JSON.parse(resp.substring(s,e+1));
+  }catch{return{summary:resp,scents:[]};}
+}
+
+// ═══════════════════════════════════════════
+//  システムプロンプト
+// ═══════════════════════════════════════════
+const SYSTEM_SCENT = `あなたは「GENESIS CODE」— 世界最高の男性香り×DNA戦略AIです。以下を統合した複合専門家として機能します：
+・世界三大調香師（フランソワーズ・カロン/ジャック・キャバリエ/ジャン＝クロード・エレナ）の哲学
+・内分泌専門医（テストステロン・コルチゾール・オキシトシン管理）
+・進化生物学者（MHC主要組織適合性複合体・性選択・DNA継承戦略）
+・嗅覚神経科学者（扁桃体0.03秒直達・アンドロスタジエノン研究）
+・スポーツ医学（筋トレ後T値上昇+20〜40%・至適時間45分）
+
+【コア科学データ】
+・Wyart 2007 J.Neurosci: アンドロスタジエノンが女性のT値上昇・コルチゾール低下
+・Wedekind 1995 Biol.Lett: MHC異型体選好（汗染みシャツ実験）
+・Lundström 2013 Horm.Behav: 授乳中女性の腋下分泌→男性T値+16〜21%
+・Feinberg 2006: 排卵期女性の声の低さ選好増加
+
+【応答フォーマット】必ず以下のJSONのみ返答（前後テキスト不要）：
+{
+  "summary": "戦略コメント（120字以内）",
+  "dnaScore": 総合DNAスコア数値(0-100),
+  "scents": [
+    {
+      "rank": "S/A/B/C",
+      "score": スコア数値,
+      "brand": "ブランド名",
+      "name": "製品名",
+      "type": "EDP/EDT/PARFUM",
+      "perfumer": "調香師名",
+      "year": 発売年数値,
+      "pyramid": {
+        "top": "トップノート（具体的香料名）",
+        "heart": "ハートノート（具体的香料名）",
+        "base": "ベースノート（具体的香料名）"
+      },
+      "molecules": ["主要香料分子1","分子2","分子3"],
+      "usage": {
+        "sprays": "推奨プッシュ数",
+        "spots": "推奨部位",
+        "timing": "使用タイミング",
+        "season": "季節適性"
+      },
+      "layering": [
+        {"type": "base/over/boost", "product": "重ね付け推奨製品名", "desc": "重ね付け効果"}
+      ],
+      "neuro": "脳科学・MHC・ホルモンとの関係説明（80字以内）",
+      "goodScenes": ["適合シーン1","シーン2","シーン3"],
+      "badScenes": ["不適合シーン1","シーン2"],
+      "ratings": {"attraction": 魅力度数値, "trust": 信頼感数値, "clean": 清潔感数値, "leader": リーダー性数値, "mhc": MHC増幅度数値}
+    }
+  ]
+}`;
+
+const SYSTEM_INFO = `あなたは世界トップの香水ジャーナリスト兼香料アナリストです。Googleリアルタイム検索で最新の香水業界情報を取得し、以下のJSONで返答してください（JSON以外不要）：
+{
+  "summary": "概要コメント（100字以内）",
+  "items": [
+    {
+      "category": "カテゴリ名",
+      "title": "タイトル",
+      "brand": "ブランド名（あれば）",
+      "body": "詳細内容（150字以内）",
+      "price": "価格情報（あれば）",
+      "tags": ["タグ1","タグ2"],
+      "icon": "絵文字1つ"
+    }
+  ]
+}`;
+
+// ═══════════════════════════════════════════
+//  プロンプト定義
+// ═══════════════════════════════════════════
+function buildPrompt(type, custom=''){
+  const now = new Date();
+  const ds = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+  const season = ['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][now.getMonth()];
+
+  const prompts = {
+    full_strategy: `${ds}・${season}。男性向け最強香り戦略。目的：恋愛・仕事・DNA継承本能を最大化する今日の最強香水3選を選んでください。最新の人気香水情報をGoogle検索で確認してから選定してください。MHCシグナル増幅・アンドロスタジエノン配合・テストステロン状態に最適なもの。`,
+    date: `${ds}・${season}の男性向けデート・恋愛特化香水3選。Google検索で最新の人気香水情報を確認の上、オキシトシン促進・MHC増幅・女性の排卵期嗅覚感度に対応するもの。アンドロスタジエノン・サンダルウッド(α-サンタロール)・ジャスミン(インドール)を含む製品を優先。`,
+    business: `${ds}・${season}の男性向けビジネス・商談最強香水3選。Google検索で確認後、信頼感97点・リーダーシップ・知的印象を与える香料を選定。サンダルウッド・シダーウッド・ベルガモットFCF・アンブロキサンを含む製品を優先。`,
+    first_meet: `${ds}・${season}の男性向け初対面最強香水3選。Google検索で確認後、扁桃体への清潔感シグナル・ベルガモットのセロトニン効果・ラベンダーのGABA促進成分を含む製品を優先。世界売上1位〜10位クラスの定番から選定。`,
+    mhc: `${ds}・${season}の男性向けMHC遺伝的適合性最大化香水3選。Google検索で確認後、体臭MHCシグナルを上書きせず増幅する設計の製品。アンブレットリド・天然ムスク系・アンブロキサン低配合製品を優先。Wedekind1995理論を基に。`,
+    testosterone: `${ds}・${season}の男性向けテストステロン最大化香水3選。Google検索で確認後、筋トレ後T値上昇状態(+20〜40%)に最適な香り。アンドロスタジエノン配合・スパイシー×ウッディ×アンバー系。Wyart2007の研究に基づく設計。`,
+    leader: `${ds}・${season}の男性向けリーダーシップ・カリスマ最強香水3選。Google検索で確認後、権威感・洗練性・社会的地位の高さを香りで表現。フゼア・レザー・スパイシーウッド系。フランス大統領・CEOが好む香調。`,
+    custom: custom
+  };
+  return (SYSTEM_SCENT + '\n\n' + (prompts[type]||prompts.custom));
+}
+
+function buildInfoPrompt(type, custom=''){
+  const now = new Date();
+  const ds = `${now.getFullYear()}年${now.getMonth()+1}月`;
+  const season = ['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][now.getMonth()];
+
+  const prompts = {
+    world_trends: `${ds}の世界香水市場最新トレンドをGoogle検索で調べてください。ニッチフレグランス・メゾン香水・グローバルヒット・2025年注目ブランドを5〜8項目で。`,
+    new_releases: `${ds}に発売・発表された新作男性香水・ユニセックス香水をGoogle検索で調べてください。ブランド名・製品名・特徴・価格・評判を5〜8項目。`,
+    popular_japan: `${ds}の日本国内で人気の男性香水ランキングをGoogle検索で調べてください。楽天・Amazon・@cosme等のデータ。TOP5〜8を詳しく。`,
+    niche_world: `${ds}の世界ニッチフレグランスブランド注目作をGoogle検索で調べてください。Fragrantica・Basenotes等の評価。Le Labo・Byredo・Serge Lutens等含む5〜8作品。`,
+    molecule_science: `香料分子の最新科学情報をGoogle検索で調べてください。アンドロスタジエノン・アンブロキサン・イソEスーパー・サンタロール等の2024〜2025年研究。5〜8項目。`,
+    season_now: `${season}の男性香水おすすめをGoogle検索で調べてください。${season}の気候・温度・湿度に最適な香調・製品・使い方。5〜8項目。`,
+    price_range: `男性向け香水の価格帯別おすすめをGoogle検索で調べてください。〜5000円/〜15000円/〜30000円/30000円超 の各ベスト製品。2025年最新情報。`,
+    custom: custom
+  };
+  return (SYSTEM_INFO + '\n\n' + (prompts[type]||prompts.custom));
+}
+
+// ═══════════════════════════════════════════
+//  ANALYZE実行
+// ═══════════════════════════════════════════
+function setAllDisabled(dis){
+  document.getElementById('main-btn').disabled=dis;
+  document.querySelectorAll('#page-main .preset-sm').forEach(b=>b.disabled=dis);
+  document.getElementById('custom-go-btn').disabled=dis;
+}
+
+async function runAnalyze(type){
+  setAllDisabled(true);
+  showLoading('result-main','🧬','Gemini 2.5 Flash + Google検索で最新香水情報を解析中...','香り戦略を構築中');
+  try{
+    const prompt=buildPrompt(type);
+    const resp=await callAI(prompt,true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'result-main');
+  }catch(e){showError('result-main',e.message);}
+  setAllDisabled(false);
+  document.getElementById('main-btn').innerHTML='<span class="ik-icon">🧬</span>今日の最強香り戦略を一撃解析';
+}
+
+async function runCustom(){
+  const v=document.getElementById('custom-input').value.trim();
+  if(!v){alert('質問を入力してください');return;}
+  setAllDisabled(true);
+  showLoading('result-main','🔍','カスタム検索中...','AIが解析中');
+  try{
+    const resp=await callAI(SYSTEM_SCENT+v,true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'result-main');
+  }catch(e){showError('result-main',e.message);}
+  setAllDisabled(false);
+}
+
+// ═══════════════════════════════════════════
+//  情報タブ モード管理
+// ═══════════════════════════════════════════
+let infoMode = 'search'; // 'search' | 'url' | 'both'
+
+function setInfoMode(mode){
+  infoMode = mode;
+  const configs = {
+    search: {search:'var(--gold-xl)',searchBorder:'rgba(184,130,10,.35)',searchColor:'var(--gold)', url:'var(--bg3)',urlBorder:'var(--bor)',urlColor:'var(--txt3)', both:'var(--bg3)',bothBorder:'var(--bor)',bothColor:'var(--txt3)'},
+    url:    {search:'var(--bg3)',searchBorder:'var(--bor)',searchColor:'var(--txt3)', url:'var(--teal-xl)',urlBorder:'rgba(14,143,160,.3)',urlColor:'var(--teal)', both:'var(--bg3)',bothBorder:'var(--bor)',bothColor:'var(--txt3)'},
+    both:   {search:'var(--bg3)',searchBorder:'var(--bor)',searchColor:'var(--txt3)', url:'var(--bg3)',urlBorder:'var(--bor)',urlColor:'var(--txt3)', both:'var(--vio-xl)',bothBorder:'rgba(124,80,192,.3)',bothColor:'var(--vio)'},
+  };
+  const c = configs[mode];
+  const sb=document.getElementById('mode-search-btn');
+  const ub=document.getElementById('mode-url-btn');
+  const bb=document.getElementById('mode-both-btn');
+  const up=document.getElementById('url-panel');
+  if(sb){sb.style.background=c.search;sb.style.borderColor=c.searchBorder;sb.style.color=c.searchColor;}
+  if(ub){ub.style.background=c.url;ub.style.borderColor=c.urlBorder;ub.style.color=c.urlColor;}
+  if(bb){bb.style.background=c.both;bb.style.borderColor=c.bothBorder;bb.style.color=c.bothColor;}
+  if(up) up.style.display=(mode==='url'||mode==='both')?'block':'none';
+}
+
+function getInfoCallParams(){
+  return {
+    useSearch: infoMode==='search'||infoMode==='both',
+    useUrl:    infoMode==='url'||infoMode==='both',
+  };
+}
+
+function getUrlInputs(){
+  const urls = [];
+  for(let i=1;i<=3;i++){
+    const v = (document.getElementById('url-input-'+i)||{}).value||'';
+    if(v.trim().startsWith('http')) urls.push(v.trim());
+  }
+  return urls;
+}
+
+async function runUrlAnalysis(){
+  const urls = getUrlInputs();
+  if(urls.length===0){showCycleToast('URLを1件以上入力してください');return;}
+  const q = (document.getElementById('url-question')||{}).value||'この香水の詳細・評価・価格・おすすめシーンを日本語でまとめてください。';
+  setInfoDisabled(true);
+  showLoading('result-info','🔗','URLを取得してGemini 2.5 Flashで解析中...','URL Context解析');
+  const prompt = SYSTEM_INFO+'\n\n以下のURLのページ内容を取得して解析してください。\n対象URL：\n'+urls.map((u,i)=>(i+1)+'. '+u).join('\n')+'\n\n質問・指示：'+q+'\nURLのページ内容を元に具体的に回答してください。';
+  try{
+    const resp = await callAI(prompt, infoMode==='both', true, urls);
+    const data = parseJSON(resp);
+    if(data&&data.items&&data.items.length>0){
+      renderInfoResult(data);
+    } else {
+      const sid = _s(resp, urls[0]||'香水情報', 'result-info');
+      document.getElementById('result-info').innerHTML =
+        '<div class="ai-comment" style="margin:0 12px 10px">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">'
+        +'<div class="ai-comment-lbl" style="margin-bottom:0;">🔗 URL解析結果</div>'
+        +'<div style="display:flex;gap:4px;">'
+        +'<button data-sid="'+sid+'" data-action="copy" style="padding:3px 8px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋</button>'
+        +'<button data-sid="'+sid+'" data-action="google" style="padding:3px 8px;border-radius:var(--rf);background:var(--gold-xl);border:1px solid rgba(184,130,10,.2);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔍</button>'
+        +'</div></div>'
+        +'<div class="ai-comment-body">'+renderMarkdown(resp)+'</div>'
+        +'<button data-sid="'+sid+'" data-action="deep" style="width:100%;margin-top:8px;padding:8px;border-radius:9px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;">🔬 さらに深堀り</button>'
+        +'</div>';
+    }
+  }catch(e){showError('result-info',e.message);}
+  setInfoDisabled(false);
+}
+
+function pasteUrl(n){
+  navigator.clipboard.readText().then(t=>{
+    const el=document.getElementById('url-input-'+n);
+    if(el) el.value=t.trim();
+  }).catch(()=>showCycleToast('クリップボードへのアクセスを許可してください'));
+}
+
+function setQuickUrl(url){
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById('url-input-'+i);
+    if(el&&!el.value){ el.value=url; return; }
+  }
+}
+
+// ═══════════════════════════════════════════
+//  INFO実行（モード対応版）
+// ═══════════════════════════════════════════
+function setInfoDisabled(dis){
+  document.getElementById('info-main-btn').disabled=dis;
+  document.querySelectorAll('#page-info .preset-sm').forEach(b=>b.disabled=dis);
+}
+
+async function runInfo(type){
+  setInfoDisabled(true);
+  const {useSearch,useUrl}=getInfoCallParams();
+  const modeLabel=infoMode==='both'?'Google検索+URL':infoMode==='url'?'URL Context':'Google検索';
+  showLoading('result-info','🌍','['+modeLabel+'] 最新情報を取得中...','Gemini 2.5 Flash解析中');
+  try{
+    const prompt=buildInfoPrompt(type);
+    const resp=await callAI(prompt,useSearch,useUrl,[]);
+    const data=parseJSON(resp);
+    renderInfoResult(data);
+  }catch(e){showError('result-info',e.message);}
+  setInfoDisabled(false);
+}
+
+async function runInfoCustom(){
+  const v=document.getElementById('info-custom-input').value.trim();
+  if(!v){alert('検索内容を入力してください');return;}
+  setInfoDisabled(true);
+  const {useSearch,useUrl}=getInfoCallParams();
+  showLoading('result-info','🔍','検索中...','解析中');
+  try{
+    const resp=await callAI(buildInfoPrompt('custom',v),useSearch,useUrl,[]);
+    const data=parseJSON(resp);
+    renderInfoResult(data);
+  }catch(e){showError('result-info',e.message);}
+  setInfoDisabled(false);
+}
+
+// ═══════════════════════════════════════════
+//  HORMONE解析
+// ═══════════════════════════════════════════
+async function runHormoneAnalysis(){
+  const tval=document.getElementById('t-slider').value;
+  const wake=document.getElementById('t-wake').value;
+  const gym=document.getElementById('t-gym').value;
+  const sleep=document.getElementById('t-sleep').value;
+  const stress=document.getElementById('t-stress').value;
+  showLoading('result-hormone','⚡','ホルモン状態×香り最適化を解析中...','AIが処方設計中');
+  const gymMap={none:'筋トレなし',light:'軽い筋トレ',heavy:'高強度筋トレ（複合種目）',post45:'高強度筋トレ45分以内完了（T値最大上昇フェーズ）'};
+  const sleepMap={'7':'7〜8時間（最適）','6':'6時間（若干不足）','5':'5時間以下（T値低下リスク）','9':'9時間以上'};
+  const stressMap={low:'低ストレス',mid:'中程度ストレス（コルチゾール上昇気味）',high:'高ストレス（コルチゾール高値→T値拮抗）'};
+  const prompt=SYSTEM_SCENT+`\n\n本日のホルモン状態：
+・テストステロン推定レベル：${tval}/100
+・起床後：${wake}時間（T値は起床後6〜8時間で最高値、以降低下）
+・筋トレ状態：${gymMap[gym]}
+・睡眠：${sleepMap[sleep]}
+・ストレス：${stressMap[stress]}
+このホルモン状態に最適化した香水3選をGoogle検索で最新情報を確認しながら選定してください。T値を最大活用・アンドロスタジエノン配合製品を優先。`;
+  try{
+    const resp=await callAI(prompt,true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'result-hormone');
+  }catch(e){showError('result-hormone',e.message);}
+}
+
+function updateTmeter(v){
+  document.getElementById('t-val-lbl').textContent=v+' / 100';
+  const tv=+v, cv=Math.round(100-tv*0.4), ov=Math.round(tv*0.6+20), dv=Math.round(tv*0.5+25);
+  [['t',tv,'linear-gradient(90deg,var(--gold),var(--gold-l))'],
+   ['c',cv,'linear-gradient(90deg,var(--rose),var(--rose-l))'],
+   ['o',ov,'linear-gradient(90deg,var(--teal),var(--teal-l))'],
+   ['d',dv,'linear-gradient(90deg,var(--vio),#a07ae0)']].forEach(([id,val,bg])=>{
+    const bar=document.getElementById('hm-'+id);
+    const valEl=document.getElementById('hm-'+id+'-val');
+    if(bar){bar.style.width=val+'%';bar.style.background=bg;}
+    if(valEl)valEl.textContent=val;
+  });
+}
+
+// ═══════════════════════════════════════════
+//  コピー・検索・深堀り — グローバルストア方式
+//  onclick内でreplaceを使わずIDで参照する
+// ═══════════════════════════════════════════
+const _store = {}; // {id: {text, query, area}}
+let _storeIdx = 0;
+function _s(text, query, area){
+  const id = 'ds' + (_storeIdx++);
+  _store[id] = {text, query, area};
+  return id;
+}
+
+function copyByStore(id, btnEl){
+  const d = _store[id]; if(!d) return;
+  navigator.clipboard.writeText(d.text).then(()=>{
+    const orig=btnEl.innerHTML;
+    btnEl.innerHTML='✅ コピー完了';
+    btnEl.style.background='var(--sage-xl)';
+    btnEl.style.color='var(--sage)';
+    btnEl.style.borderColor='rgba(58,138,78,.3)';
+    setTimeout(()=>{btnEl.innerHTML=orig;btnEl.style.background='';btnEl.style.color='';btnEl.style.borderColor='';},2000);
+  });
+}
+function googleByStore(id){
+  const d = _store[id]; if(!d) return;
+  window.open('https://www.google.com/search?q='+encodeURIComponent(d.query),'_blank');
+}
+async function deepByStore(id){
+  const d = _store[id]; if(!d) return;
+  await deepDive(d.text, d.area);
+}
+
+// 旧API互換
+function copyText(text, btnEl){ navigator.clipboard.writeText(text).then(()=>{ const o=btnEl.innerHTML; btnEl.innerHTML='✅ コピー完了'; setTimeout(()=>{btnEl.innerHTML=o;},2000); }); }
+function openGoogle(query){ window.open('https://www.google.com/search?q='+encodeURIComponent(query),'_blank'); }
+
+// 深堀り用：最後のAI回答を保持
+let lastAIContext = '';
+
+async function deepDive(srcText, areaId){
+  const area=document.getElementById(areaId);
+  // 深堀りパネルを既存の下に追加
+  const divId='deepdive-'+Date.now();
+  const div=document.createElement('div');
+  div.id=divId;
+  div.style.cssText='margin:0 12px 10px;';
+  div.innerHTML=`<div class="loading-card"><div class="loading-orb">🔬</div><div class="loading-text">この内容をGemini 2.5 Flashで深堀り解析中...</div><div class="loading-step"><span class="loader"></span>Web検索で追加情報収集</div></div>`;
+  area.appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'nearest'});
+  try{
+    const prompt=`以下の香水情報をさらに深堀りして詳細に解説してください。
+【元の情報】${srcText}
+【深堀り要求】
+1. この香水の詳細な香料分子と神経科学的効果
+2. 実際の購入場所・価格（日本国内最新情報をGoogle検索で確認）
+3. 類似香水・代替品の比較
+4. ユーザーレビュー・実際の評判
+5. 男性が使う場合の具体的な戦略的アドバイス
+Google検索で最新情報を確認しながら200字程度で詳しく回答してください。`;
+    const resp=await callAI(prompt,true);
+    const did=_s(resp, srcText.substring(0,40)+' 購入 価格', areaId);
+    div.innerHTML=`<div class="sec" style="border-color:var(--teal)44;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--teal);">🔬 DEEP DIVE 深堀り解析</div>
+        <button data-sid="${did}" data-action="copy" style="padding:3px 9px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋 コピー</button>
+      </div>
+      <div style="font-size:11px;color:var(--txt);line-height:1.85;">${resp}</div>
+      <div style="display:flex;gap:5px;margin-top:9px;flex-wrap:wrap;">
+        <button data-sid="${did}" data-action="google" style="flex:1;padding:7px 8px;border-radius:9px;background:var(--gold-xl);border:1px solid rgba(184,130,10,.25);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔍 Google検索</button>
+        <button data-sid="${did}" data-action="deep" style="flex:1;padding:7px 8px;border-radius:9px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔬 さらに深堀り</button>
+      </div>
+    </div>`;
+  }catch(e){
+    div.innerHTML=`<div class="sec"><div style="color:var(--rose);font-size:11px;">⚠️ ${e.message}</div></div>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  RENDER: 香水カード（ストア方式・構文エラーなし）
+// ═══════════════════════════════════════════
+function renderScentResult(data, areaId){
+  const area=document.getElementById(areaId);
+  area.innerHTML='';
+  if(data.summary){
+    const sid=_s(data.summary, data.summary.substring(0,60), areaId);
+    const s=document.createElement('div');
+    s.innerHTML=`<div class="ai-comment" style="margin:0 12px 10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <div class="ai-comment-lbl" style="margin-bottom:0;">AI総合戦略コメント</div>
+        <div style="display:flex;gap:4px;">
+          <button data-sid="${sid}" data-action="copy" style="padding:3px 8px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋</button>
+          <button data-sid="${sid}" data-action="google" style="padding:3px 8px;border-radius:var(--rf);background:var(--gold-xl);border:1px solid rgba(184,130,10,.2);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔍</button>
+        </div>
+      </div>
+      <div class="ai-comment-body">${data.summary}</div>
+      <button data-sid="${sid}" data-action="deep" style="width:100%;margin-top:8px;padding:8px;border-radius:9px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;">🔬 この回答を深堀り解析</button>
+    </div>`;
+    area.appendChild(s);
+  }
+  if(data.dnaScore){
+    const ds=document.createElement('div');
+    ds.style.cssText='margin:0 12px 10px;';
+    ds.innerHTML=`<div class="sec"><div class="sec-t"><span class="sec-icon">🧬</span>DNA戦略スコア</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="text-align:center;"><div style="font-family:var(--fu);font-size:48px;font-weight:900;color:var(--gold);line-height:1;">${data.dnaScore}</div><div style="font-family:var(--fu);font-size:9px;color:var(--txt3);letter-spacing:2px;">DNA SCORE</div></div>
+        <div style="flex:1;">
+          <div class="rbar-row"><span class="rbar-lbl">魅力度</span><div class="rbar-t"><div class="rbar-fi" style="width:${data.dnaScore}%"></div></div></div>
+          <div class="rbar-row"><span class="rbar-lbl">生存適性</span><div class="rbar-t"><div class="rbar-fi" style="width:${Math.round(data.dnaScore*0.95)}%"></div></div></div>
+          <div class="rbar-row"><span class="rbar-lbl">DNA継承</span><div class="rbar-t"><div class="rbar-fi" style="width:${Math.round(data.dnaScore*0.9)}%"></div></div></div>
+        </div>
+      </div></div>`;
+    area.appendChild(ds);
+  }
+  if(!data.scents||!data.scents.length){area.innerHTML+='<div class="empty"><div class="empty-i">🔍</div>条件に合う香水が見つかりませんでした</div>';return;}
+  const wrap=document.createElement('div');
+  wrap.className='result-wrap'; wrap.id=areaId+'-wrap';
+  wrap.innerHTML=`<div class="result-title">推奨香水 <span class="res-count">${data.scents.length}選</span> <span style="font-size:9px;color:var(--txt3);margin-left:4px">タップで詳細展開</span></div>`;
+  data.scents.forEach((sc,idx)=>{
+    const card=document.createElement('div');
+    card.className=`scent-card rank-${sc.rank||'B'}`;
+    const pyr=sc.pyramid||{}, use=sc.usage||{}, layers=sc.layering||[], ratings=sc.ratings||{};
+    const goodS=sc.goodScenes||[], badS=sc.badScenes||[], mols=sc.molecules||[];
+    const copyTxt=`【${sc.brand} ${sc.name}】${sc.type||'EDP'} ${sc.year||''}年\nTOP: ${pyr.top||'-'} / HEART: ${pyr.heart||'-'} / BASE: ${pyr.base||'-'}\n香料分子: ${mols.join(', ')}\n使用: ${use.sprays||'-'}プッシュ / ${use.spots||'-'} / ${use.timing||'-'}\nMHC科学: ${sc.neuro||'-'}\n合うシーン: ${goodS.join('・')}`;
+    const gq=`${sc.brand} ${sc.name} 香水 購入 価格 レビュー`;
+    const cid=_s(copyTxt, gq, areaId+'-wrap');
+    card.innerHTML=`
+      <div class="sc-header">
+        <div class="sc-rank ${sc.rank||'B'}">${sc.rank||'B'}</div>
+        <div class="sc-info">
+          <div class="sc-brand">${sc.brand||'BRAND'}</div>
+          <div class="sc-name">${sc.name||'Fragrance'}</div>
+          <div class="sc-type">${sc.type||'EDP'} ${sc.year?'/ '+sc.year+''+(sc.perfumer?' / '+sc.perfumer:''):''}</div>
+        </div>
+        <div class="sc-score-wrap"><div class="sc-score">${sc.score||0}</div><div class="sc-score-lbl">PT</div></div>
+        <div class="sc-arrow">›</div>
+      </div>
+      <div class="sc-detail">
+        <div style="display:flex;gap:5px;margin-bottom:10px;">
+          <button data-sid="${cid}" data-action="copy" style="flex:1;padding:7px 5px;border-radius:9px;background:var(--bg3);border:1.5px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">📋 コピー</button>
+          <button data-sid="${cid}" data-action="google" style="flex:1;padding:7px 5px;border-radius:9px;background:var(--gold-xl);border:1.5px solid rgba(184,130,10,.25);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔍 Google</button>
+          <button data-sid="${cid}" data-action="deep" style="flex:1;padding:7px 5px;border-radius:9px;background:var(--teal-xl);border:1.5px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔬 深堀り</button>
+        </div>
+        <div class="pyramid">
+          ${pyr.top?`<div class="pyr-row"><span class="pyr-lbl pyr-top">TOP</span><span class="pyr-notes">${pyr.top}</span></div>`:''}
+          ${pyr.heart?`<div class="pyr-row"><span class="pyr-lbl pyr-mid">HEART</span><span class="pyr-notes">${pyr.heart}</span></div>`:''}
+          ${pyr.base?`<div class="pyr-row"><span class="pyr-lbl pyr-base">BASE</span><span class="pyr-notes">${pyr.base}</span></div>`:''}
+        </div>
+        ${mols.length?`<div class="mol-tags">${mols.map(m=>`<span class="mol-tag">⬡ ${m}</span>`).join('')}</div>`:''}
+        <div class="usage-box"><div class="usage-title">💡 使用戦略</div><div class="usage-grid">
+          ${use.sprays?`<div class="usage-item"><div class="usage-k">SPRAYS</div><div class="usage-v">${use.sprays}</div></div>`:''}
+          ${use.spots?`<div class="usage-item"><div class="usage-k">SPOTS</div><div class="usage-v">${use.spots}</div></div>`:''}
+          ${use.timing?`<div class="usage-item"><div class="usage-k">TIMING</div><div class="usage-v">${use.timing}</div></div>`:''}
+          ${use.season?`<div class="usage-item"><div class="usage-k">SEASON</div><div class="usage-v">${use.season}</div></div>`:''}
+        </div></div>
+        ${layers.length?`<div class="layer-box"><div class="layer-title">🧪 重ね付け戦略</div>${layers.map(l=>`<div class="layer-item"><span class="layer-type lt-${l.type||'over'}">${l.type==='base'?'BASE':l.type==='boost'?'BOOST':'OVER'}</span><div class="layer-desc"><strong>${l.product||''}</strong>${l.desc?' — '+l.desc:''}</div></div>`).join('')}</div>`:''}
+        ${sc.neuro?`<div class="neuro-box"><div class="neuro-title">🧬 MHC × 脳科学</div><div class="neuro-text">${sc.neuro}</div></div>`:''}
+        <div class="sec" style="padding:10px 12px;margin:0 0 8px;"><div class="sec-t" style="margin-bottom:8px;"><span class="sec-icon">📊</span>評価レーダー</div>
+          ${[['魅力度',ratings.attraction||0],['信頼感',ratings.trust||0],['清潔感',ratings.clean||0],['リーダー',ratings.leader||0],['MHC増幅',ratings.mhc||0]].map(([k,v])=>`<div class="rbar-row"><span class="rbar-lbl">${k}</span><div class="rbar-t"><div class="rbar-fi" style="width:${v}%"></div></div><span style="font-family:var(--fu);font-size:10px;color:var(--gold);font-weight:800;width:28px;text-align:right;">${v}</span></div>`).join('')}
+        </div>
+        ${goodS.length?`<div style="margin-bottom:8px;"><div class="scene-lbl">✅ 合うシーン</div><div class="scene-wrap">${goodS.map(s=>`<span class="scene-tag st-good">${s}</span>`).join('')}</div></div>`:''}
+        ${badS.length?`<div style="margin-bottom:8px;"><div class="scene-lbl">❌ 合わないシーン</div><div class="scene-wrap">${badS.map(s=>`<span class="scene-tag st-bad">${s}</span>`).join('')}</div></div>`:''}
+        <div style="display:flex;gap:6px;margin-top:4px;">
+          <button data-brand="${sc.brand||''}" data-name="${sc.name||''}" data-rank="${sc.rank||'B'}" data-score="${sc.score||0}" data-action="save" style="flex:2;padding:11px;background:linear-gradient(135deg,var(--teal),var(--teal-l));border:none;border-radius:10px;color:#fff;font-family:var(--fu);font-size:12px;font-weight:900;cursor:pointer;letter-spacing:1px;">💾 保存</button>
+          <button data-brand="${sc.brand||''}" data-name="${sc.name||''}" data-rank="${sc.rank||'B'}" data-score="${sc.score||0}" data-action="compare" style="flex:1;padding:11px;background:var(--vio-xl);border:1px solid rgba(124,80,192,.25);border-radius:10px;color:var(--vio);font-family:var(--fu);font-size:12px;font-weight:900;cursor:pointer;">📊</button>
+        </div>
+      </div>`;
+    card.querySelector('.sc-header').addEventListener('click',()=>card.classList.toggle('expanded'));
+    wrap.appendChild(card);
+  });
+  area.appendChild(wrap);
+}
+
+
+// ═══════════════════════════════════════════
+//  RENDER: 香水情報（ストア方式）
+// ═══════════════════════════════════════════
+function renderInfoResult(data){
+  const area=document.getElementById('result-info');
+  area.innerHTML='';
+
+  if(data.summary){
+    const sid=_s(data.summary, data.summary.substring(0,40), 'result-info');
+    const div=document.createElement('div');
+    div.innerHTML=`<div class="ai-comment" style="margin:0 12px 10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <div class="ai-comment-lbl" style="margin-bottom:0;">AI情報サマリー</div>
+        <div style="display:flex;gap:4px;">
+          <button data-sid="${sid}" data-action="copy" style="padding:3px 8px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋</button>
+          <button data-sid="${sid}" data-action="google" style="padding:3px 8px;border-radius:var(--rf);background:var(--gold-xl);border:1px solid rgba(184,130,10,.2);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔍</button>
+        </div>
+      </div>
+      <div class="ai-comment-body">${data.summary}</div>
+      <button data-sid="${sid}" data-action="deep" style="width:100%;margin-top:8px;padding:8px;border-radius:9px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:10px;font-weight:800;cursor:pointer;">🔬 この情報を深堀り解析</button>
+    </div>`;
+    area.appendChild(div);
+  }
+
+  if(!data.items||!data.items.length){
+    area.innerHTML+='<div class="empty"><div class="empty-i">🌍</div>情報が取得できませんでした</div>';
+    return;
+  }
+
+  const grid=document.createElement('div');
+  grid.style.cssText='margin:0 12px;';
+
+  data.items.forEach((item,idx)=>{
+    const itemText=`${item.title||''} ${item.body||''} ${item.brand||''}`;
+    const gq=`${(item.brand||item.title||'').substring(0,20)} 香水 ${item.category||''} 最新情報`;
+    const iid=_s(itemText, gq, 'result-info');
+    const card=document.createElement('div');
+    card.className='news-item';
+    card.style.marginBottom='8px';
+    card.innerHTML=`
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="font-size:22px;flex-shrink:0;">${item.icon||'💎'}</div>
+        <div style="flex:1;">
+          <div class="news-cat">${item.category||''} ${item.brand?'· '+item.brand:''}</div>
+          <div class="news-title">${item.title||''}</div>
+          <div class="news-body">${item.body||''}</div>
+          ${item.price?`<div style="font-family:var(--fu);font-size:10px;color:var(--gold);font-weight:700;margin-top:5px;">💰 ${item.price}</div>`:''}
+          ${(item.tags||[]).length?`<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;">${item.tags.map(t=>`<span style="font-family:var(--fu);font-size:8px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--bg3);color:var(--txt2);border:1px solid var(--bor2);">${t}</span>`).join('')}</div>`:''}
+          <div style="display:flex;gap:4px;margin-top:8px;">
+            <button data-sid="${iid}" data-action="copy" style="flex:1;padding:5px;border-radius:8px;background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋 コピー</button>
+            <button data-sid="${iid}" data-action="google" style="flex:1;padding:5px;border-radius:8px;background:var(--gold-xl);border:1px solid rgba(184,130,10,.2);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔍 検索</button>
+            <button data-sid="${iid}" data-action="deep" style="flex:1;padding:5px;border-radius:8px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔬 深堀り</button>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  area.appendChild(grid);
+}
+
+// ═══════════════════════════════════════════
+//  LOADING / ERROR
+// ═══════════════════════════════════════════
+function showLoading(areaId, icon, text, step){
+  document.getElementById(areaId).innerHTML=`
+    <div class="loading-card">
+      <div class="loading-orb">${icon}</div>
+      <div class="loading-text">Gemini 2.5 Flash + Google検索で<br>${text}</div>
+      <div class="loading-step"><span class="loader"></span>${step}</div>
+    </div>`;
+}
+function showError(areaId, msg){
+  document.getElementById(areaId).innerHTML=`
+    <div class="sec" style="margin:0 12px;border-color:rgba(194,84,122,.3);">
+      <div style="color:var(--rose-l);font-size:12px;">⚠️ ${msg}</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+//  SAVE / HISTORY
+// ═══════════════════════════════════════════
+function saveScent(brand,name,rank,score){
+  historyData.unshift({date:new Date().toLocaleDateString('ja'),brand,name,rank,score});
+  localStorage.setItem('gc_history',JSON.stringify(historyData));
+  renderHistory();
+  alert('💾 '+name+' を保存しました');
+}
+
+function renderHistory(){
+  const t=historyData.length;
+  const topScore=t>0?Math.max(...historyData.map(h=>h.score||0)):0;
+  document.getElementById('st-total').textContent=t;
+  document.getElementById('st-saved').textContent=historyData.filter(h=>h.rank==='S'||h.rank==='A').length;
+  document.getElementById('st-score').textContent=topScore||'-';
+  const list=document.getElementById('history-list');
+  if(t===0){list.innerHTML='<div class="empty"><div class="empty-i">💾</div>保存した香水がここに表示されます</div>';return;}
+  list.innerHTML=historyData.map((h,i)=>`
+    <div class="hist-row">
+      <span class="hr-res hr-good">${h.rank||'B'}</span>
+      <div class="hr-info">
+        <div class="hr-name">${h.brand||''} ${h.name||''}</div>
+        <div class="hr-meta">${h.date||''}</div>
+      </div>
+      <span class="hr-rank" style="color:${h.rank==='S'?'var(--gold-l)':h.rank==='A'?'var(--rose-l)':'var(--teal-l)'}">${h.score||0}pt</span>
+      <button style="background:none;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:3px;" onclick="delHistory(${i})">✕</button>
+    </div>`).join('');
+}
+
+function delHistory(i){historyData.splice(i,1);localStorage.setItem('gc_history',JSON.stringify(historyData));renderHistory();}
+
+async function analyzeHistory(){
+  if(historyData.length<2){alert('2つ以上の保存履歴が必要です');return;}
+  const btn=document.getElementById('hist-analyze-btn');
+  btn.disabled=true; btn.innerHTML='<span class="loader-d"></span>AI分析中...';
+  const top=historyData.slice(0,5).map(h=>`${h.rank}ランク/${h.brand} ${h.name}`).join('、');
+  try{
+    const resp=await callAI(`香水選好分析：保存${historyData.length}点、TOP5：${top}。①選好パターン②DNA戦略的強み③次に試すべき香水提案 を120字以内で。`,false);
+    document.getElementById('insight-area').innerHTML=`<div class="insight-card"><div class="ins-lbl">🔍 AI選好パターン分析</div>${resp}</div>`;
+  }catch(e){alert('分析失敗: '+e.message);}
+  btn.disabled=false; btn.innerHTML='🤖 AI総合パターン分析';
+}
+
+// ═══════════════════════════════════════════
+//  CHAT
+// ═══════════════════════════════════════════
+async function sendChat(){
+  const inp=document.getElementById('chat-input'), msg=inp.value.trim(); if(!msg) return;
+  inp.value=''; appendMsg('user',msg);
+  const sb=document.getElementById('send-btn'); sb.disabled=true;
+  const needsSearch=/最新|新作|人気|ランキング|今|発売|値段|価格|どこ|買える/.test(msg);
+  try{
+    const aiEl=appendMsg('ai','<span class="typing"></span>');
+    const sys=`GENESIS CODE香り戦略AIアドバイザー。テストステロン・MHC・嗅覚神経科学・三大調香師哲学の専門家。${needsSearch?'Google検索で最新情報を確認の上、':''}150字以内で具体的に回答。`;
+    const resp=await callAI(sys+'\n\n'+msg,needsSearch);
+    aiEl.querySelector('.msg-bubble').innerHTML=(needsSearch?'<span style="font-family:var(--fu);font-size:8px;color:var(--teal);font-weight:700;letter-spacing:1px;">🔍 WEB検索済</span><br>':'')+renderMarkdown(resp);
+  }catch(e){appendMsg('ai','⚠️ '+e.message);}
+  sb.disabled=false;
+}
+
+function appendMsg(role,content){
+  const msgs=document.getElementById('chat-msgs');
+  const div=document.createElement('div'); div.className='msg '+role;
+  div.innerHTML=`<div class="msg-av av-${role}">${role==='ai'?'✦':'🧬'}</div><div class="msg-bubble">${content}</div>`;
+  msgs.appendChild(div); msgs.scrollTop=msgs.scrollHeight; return div;
+}
+
+// ═══════════════════════════════════════════
+//  NEURO CARDS（静的学習データ）
+// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  🧠 脳科学タブ — 3段階新実装
+// ═══════════════════════════════════════════
+
+// ホルモンデータ（インタラクティブ図解用）
+const HORMONE_MAP = [
+  {
+    id:'testosterone', emoji:'⚡', name:'テストステロン', color:'#c9952a',
+    role:'性的魅力・筋力・競争心・リーダーシップ・自信の源泉',
+    peakTime:'午前6〜9時・筋トレ後45分',
+    scent:'アンドロスタジエノン・サンダルウッド・シダーウッド・スパイシー系',
+    molecules:['アンドロスタジエノン(CAS:117-37-3)','α-サンタロール','セドロール'],
+    perfumes:['Dior Sauvage','Terre d\'Hermès','Bleu de Chanel'],
+    research:'Wyart 2007: 女性のコルチゾール低下・気分向上を引き起こす。排卵期女性で効果3倍。',
+    tip:'筋トレ後45分以内が最大拡散タイミング。高強度複合種目でT値+20〜40%上昇後に使用。',
+    coachHint:'テストステロン最大化で性的魅力・リーダーシップを強化したい'
+  },
+  {
+    id:'oxytocin', emoji:'🤝', name:'オキシトシン', color:'#2ab8c9',
+    role:'絆・信頼・愛着・安心感・母性・共感の「絆ホルモン」',
+    peakTime:'スキンシップ後・アイコンタクト後・授乳中',
+    scent:'バニラ・サンダルウッド・ジャスミン・ラクトン系・ムスク',
+    molecules:['γ-ノナラクトン','クマリン','ベンジルアセテート','ムスコン'],
+    perfumes:['Maison Margiela Replica','Le Labo Santal 33','Guerlain Shalimar'],
+    research:'Lundström 2013: 授乳中女性の体臭が男性T値+16〜21%上昇。安心感の連鎖が絆を深める。',
+    tip:'バニラ・ラクトン系は乳幼児の記憶と連結し「安全な存在」として無意識に認知される。',
+    coachHint:'オキシトシン促進で信頼感・絆・安心感を与える香水を選びたい'
+  },
+  {
+    id:'cortisol', emoji:'🛡', name:'コルチゾール', color:'#c2547a',
+    role:'ストレス応答ホルモン。過剰になるとT値と拮抗し魅力を損なう',
+    peakTime:'ストレス時・睡眠不足時・過剰トレーニング後',
+    scent:'ラベンダー・ベルガモット・カモミール・1,8-シネオール',
+    molecules:['リナロール(CAS:78-70-6)','リモネン','1,8-シネオール','ゲラニオール'],
+    perfumes:['Diptyque Tam Dao','Hermès Un Jardin sur le Nil','Jo Malone Wood Sage'],
+    research:'Moss 2010: ラベンダーがコルチゾール低下を促進。ベルガモットのリナロールがGABA受容体を活性化。',
+    tip:'コルチゾール高値状態では全ての香水効果が半減。まず鎮静系香料でリセットしてから戦略香水を使う。',
+    coachHint:'コルチゾール（ストレス）を下げてリラックスしたい'
+  },
+  {
+    id:'dopamine', emoji:'🎯', name:'ドーパミン', color:'#9b6ec9',
+    role:'報酬・動機・快楽・期待感・創造性の「やる気ホルモン」',
+    peakTime:'目標達成時・新しい刺激・運動後',
+    scent:'シトラス系・ペパーミント・ジャスミン・希少なニッチ香水',
+    molecules:['リモネン','メントール(CAS:89-78-1)','インドール','シス-ジャスモン'],
+    perfumes:['Creed Aventus','Byredo Gypsy Water','Frederic Malle Portrait of a Lady'],
+    research:'新しい・珍しい香りへの初回接触時にドーパミン放出が増加。希少性が報酬系を刺激する。',
+    tip:'毎日同じ香水は脳が慣れてドーパミン効果が失われる。週3〜4本をローテーションするのが最強戦略。',
+    coachHint:'ドーパミン系（やる気・魅力・報酬感）を最大化する香水を選びたい'
+  },
+  {
+    id:'mhc', emoji:'🧬', name:'MHC遺伝シグナル', color:'#34d399',
+    role:'免疫型の遺伝情報を体臭として放出。本能的な相性の根拠',
+    peakTime:'常時放出（体臭として）',
+    scent:'ムスク系・アンブレット・アンブロキサン低配合・天然系',
+    molecules:['アンブロキサン(CAS:6790-58-5)','アンブレットリド','エチレンブラシレート'],
+    perfumes:['Le Labo Santal 33','Comme des Garçons Amazingreen','Byredo Slow Dance'],
+    research:'Wedekind 1995: MHC異型体の体臭を最も好む（汗染みシャツ実験）。最も遺伝的に遠い相手を本能的に選ぶ。',
+    tip:'高濃度香水でMHCを完全マスクすると逆効果。体臭+香水の混合物が最強シグネチャー。2プッシュ以内が黄金律。',
+    coachHint:'MHCシグナルを増幅して本能的な相性・遺伝的魅力を最大化したい'
+  },
+];
+
+// 神経経路マップデータ
+const NEURO_PATH = [
+  {step:1, icon:'👃', name:'嗅細胞', desc:'鼻腔内の嗅上皮。香料分子を受容。嗅覚だけが視床をバイパスする唯一の感覚。', color:'#c9952a'},
+  {step:2, icon:'💡', name:'嗅球', desc:'嗅細胞から直接信号を受取る。0.03秒で扁桃体・海馬へ直達。視床フィルターを通さない。', color:'#e8b84b'},
+  {step:3, icon:'😤', name:'扁桃体', desc:'感情・恐怖・性的魅力の中枢。アンドロスタジエノンはここでコルチゾールを低下させ「安全な男性」と判断させる。', color:'#f43f5e'},
+  {step:4, icon:'🧠', name:'海馬', desc:'記憶・学習の中枢。香りと感情が同時に記憶される「プルースト効果」の発生源。初対面の香りが永続的に記憶される。', color:'#8b5cf6'},
+  {step:5, icon:'🎯', name:'視床下部', desc:'ホルモン分泌の制御塔。MHCシグナルを受け取り生殖ホルモンの分泌を調整。排卵期女性で感受性が最大3倍。', color:'#34d399'},
+  {step:6, icon:'👑', name:'前頭前野', desc:'論理・判断・意思決定。ここで「信頼できる人物」という最終判断が形成される。サンダルウッドが副交感神経を通じてここを最適化。', color:'#2ab8c9'},
+];
+
+let neuroActiveTab = 'map';
+
+function switchNeuroTab(tab){
+  neuroActiveTab = tab;
+  ['map','hormone','coach'].forEach(t => {
+    const panel = document.getElementById('neuro-panel-'+t);
+    const btn = document.getElementById('neuro-tab-'+(t==='map'?1:t==='hormone'?2:3));
+    if(panel) panel.style.display = t===tab ? 'block' : 'none';
+    if(btn){
+      if(t===tab){
+        btn.style.background = 'var(--vio-xl)';
+        btn.style.borderColor = 'rgba(124,80,192,.3)';
+        btn.style.color = 'var(--vio)';
+      } else {
+        btn.style.background = 'var(--bg3)';
+        btn.style.borderColor = 'var(--bor)';
+        btn.style.color = 'var(--txt3)';
+      }
+    }
+  });
+  if(tab==='map') renderNeuroMap();
+  if(tab==='hormone') renderHormoneCards();
+}
+
+// ─── 神経経路マップ描画 ───
+function renderNeuroMap(){
+  const area = document.getElementById('neuro-map-area');
+  if(!area) return;
+  let html = '';
+  NEURO_PATH.forEach((node, idx) => {
+    html += '<div style="display:flex;align-items:stretch;gap:10px;margin-bottom:4px;" onclick="toggleNeuroNode('+idx+')" id="neuro-node-'+idx+'">';
+    html += '<div style="display:flex;flex-direction:column;align-items:center;">';
+    html += '<div style="width:36px;height:36px;border-radius:50%;background:'+node.color+'22;border:2px solid '+node.color+';display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0;">'+node.icon+'</div>';
+    if(idx<NEURO_PATH.length-1) html += '<div style="width:2px;flex:1;background:linear-gradient(180deg,'+node.color+','+NEURO_PATH[idx+1].color+');min-height:12px;margin:2px 0;"></div>';
+    html += '</div>';
+    html += '<div style="flex:1;padding-bottom:8px;">';
+    html += '<div style="display:flex;align-items:center;gap:6px;cursor:pointer;">';
+    html += '<div style="font-family:var(--fu);font-size:10px;font-weight:800;color:'+node.color+';letter-spacing:.5px;">STEP '+node.step+' — '+node.name+'</div>';
+    html += '<div id="neuro-arrow-'+idx+'" style="font-size:10px;color:var(--txt3);transition:transform .2s;">›</div>';
+    html += '</div>';
+    html += '<div id="neuro-detail-'+idx+'" style="display:none;font-size:10px;color:var(--txt2);line-height:1.75;margin-top:4px;padding:8px 10px;background:'+node.color+'10;border-radius:8px;border-left:2px solid '+node.color+';">'+node.desc+'</div>';
+    html += '</div></div>';
+  });
+  area.innerHTML = html;
+}
+
+function toggleNeuroNode(idx){
+  const detail = document.getElementById('neuro-detail-'+idx);
+  const arrow = document.getElementById('neuro-arrow-'+idx);
+  if(!detail) return;
+  const open = detail.style.display === 'block';
+  detail.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.style.transform = open ? '' : 'rotate(90deg)';
+}
+
+// ─── ホルモンカード描画 ───
+function renderHormoneCards(){
+  const area = document.getElementById('hormone-detail-area');
+  if(!area) return;
+  let html = '<div style="padding:0 12px;">';
+  HORMONE_MAP.forEach(h => {
+    html += '<div style="background:var(--sur);border:1.5px solid '+h.color+'44;border-radius:var(--r3);padding:14px;margin-bottom:10px;cursor:pointer;" onclick="toggleHormoneCard(\''+h.id+'\')">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;" id="hc-header-'+h.id+'">';
+    html += '<div style="display:flex;align-items:center;gap:9px;">';
+    html += '<div style="width:40px;height:40px;border-radius:var(--r2);background:'+h.color+'20;border:1.5px solid '+h.color+'44;display:flex;align-items:center;justify-content:center;font-size:22px;">'+h.emoji+'</div>';
+    html += '<div><div style="font-family:var(--fu);font-size:13px;font-weight:900;color:'+h.color+';letter-spacing:.5px;">'+h.name+'</div>';
+    html += '<div style="font-size:9px;color:var(--txt2);margin-top:1px;">'+h.role.substring(0,28)+'...</div></div>';
+    html += '</div>';
+    html += '<div style="font-size:16px;color:var(--txt3);transition:transform .2s;" id="hc-arrow-'+h.id+'">›</div>';
+    html += '</div>';
+    // 詳細パネル
+    html += '<div id="hc-detail-'+h.id+'" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--bor);">';
+    html += '<div style="font-size:10px;color:var(--txt);line-height:1.8;margin-bottom:9px;">'+h.role+'</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:6px;">';
+    html += buildHormoneRow('⏰ ピーク時間', h.peakTime, h.color);
+    html += buildHormoneRow('🌸 対応香料', h.scent, h.color);
+    html += '<div style="background:var(--bg3);border-radius:9px;padding:9px 11px;">';
+    html += '<div style="font-family:var(--fu);font-size:8px;font-weight:700;color:'+h.color+';letter-spacing:1.5px;margin-bottom:5px;">⬡ 主要香料分子</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:4px;">'+h.molecules.map(m=>'<span style="font-family:var(--fu);font-size:8px;padding:2px 8px;border-radius:20px;background:'+h.color+'15;color:'+h.color+';border:1px solid '+h.color+'30;">'+m+'</span>').join('')+'</div></div>';
+    html += '<div style="background:var(--bg3);border-radius:9px;padding:9px 11px;">';
+    html += '<div style="font-family:var(--fu);font-size:8px;font-weight:700;color:'+h.color+';letter-spacing:1.5px;margin-bottom:5px;">💎 推奨香水例</div>';
+    html += '<div style="font-size:10px;color:var(--txt);">'+h.perfumes.join(' / ')+'</div></div>';
+    html += buildHormoneRow('🔬 研究エビデンス', h.research, h.color);
+    html += buildHormoneRow('💡 実践ヒント', h.tip, h.color);
+    html += '</div>';
+    // AI相談直通ボタン
+    html += '<button data-action="neuro-coach-direct" data-hint="'+h.coachHint.replace(/"/g,'')+'" style="width:100%;margin-top:10px;padding:11px;background:linear-gradient(135deg,'+h.color+','+h.color+'cc);border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.5px;box-shadow:0 3px 12px '+h.color+'44;">🤖 このホルモンでAIコーチに相談 →</button>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function buildHormoneRow(label, value, color){
+  return '<div style="background:var(--bg3);border-radius:9px;padding:8px 11px;">'
+    +'<div style="font-family:var(--fu);font-size:8px;font-weight:700;color:'+color+';letter-spacing:1.5px;margin-bottom:3px;">'+label+'</div>'
+    +'<div style="font-size:10px;color:var(--txt);line-height:1.7;">'+value+'</div>'
+    +'</div>';
+}
+
+function toggleHormoneCard(id){
+  const detail = document.getElementById('hc-detail-'+id);
+  const arrow = document.getElementById('hc-arrow-'+id);
+  if(!detail) return;
+  const open = detail.style.display === 'block';
+  detail.style.display = open ? 'none' : 'block';
+  if(arrow) arrow.style.transform = open ? '' : 'rotate(90deg)';
+}
+
+// ─── Geminiリサーチ ───
+const NEURO_RESEARCH_PROMPTS = {
+  androstenone: 'アンドロステノン・アンドロスタジエノン・アンドロステノールの最新研究（2020年以降）をGoogle検索で調べてください。女性の脳・ホルモン・行動への影響を具体的に。香水戦略への応用も含めて200字程度で回答。',
+  mhc: 'MHC主要組織適合性複合体と体臭・香水選択の最新研究をGoogle検索で調べてください。Wedekind実験の最新追試・批判・発展研究を含め200字程度で。',
+  oxytocin: 'オキシトシンと香料・嗅覚の関係の最新研究をGoogle検索で調べてください。信頼感・絆・性的魅力への影響と具体的な香料分子への応用を200字程度で。',
+  amygdala: '嗅覚と扁桃体の神経経路に関する最新神経科学研究をGoogle検索で調べてください。0.03秒直達経路・感情形成・記憶定着への最新知見を200字程度で。',
+  testosterone_scent: 'テストステロンと嗅覚・体臭・香水の関係の最新研究をGoogle検索で調べてください。2022年以降の論文を優先し、男性が使うべき香料分子の最新知見を200字程度で。',
+  pheromone_2025: '2024〜2025年の人間フェロモン・嗅覚信号の最新研究をGoogle検索で調べてください。新発見・論争・香水業界への影響を含め200字程度で。',
+};
+
+async function runNeuroResearch(type){
+  const area = document.getElementById('neuro-research-result');
+  if(!area) return;
+  area.innerHTML = '<div class="loading-card"><div class="loading-orb">🔬</div><div class="loading-text">Gemini 2.5 Flashで最新論文を検索中...</div><div class="loading-step"><span class="loader"></span>Google Scholar・PubMed・最新研究を取得</div></div>';
+  try{
+    const prompt = NEURO_RESEARCH_PROMPTS[type] || NEURO_RESEARCH_PROMPTS.pheromone_2025;
+    const resp = await callAI(prompt, true, false, []);
+    const sid = _s(resp, '脳科学 '+type+' 最新研究', 'neuro-research-result');
+    area.innerHTML = '<div class="neuro-box" style="margin:0 0 10px;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">'
+      +'<div class="neuro-title">🔬 最新研究 — Gemini 2.5 Flash</div>'
+      +'<div style="display:flex;gap:4px;">'
+      +'<button data-sid="'+sid+'" data-action="copy" style="padding:3px 8px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋</button>'
+      +'<button data-sid="'+sid+'" data-action="deep" style="padding:3px 8px;border-radius:var(--rf);background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔬</button>'
+      +'</div></div>'
+      +'<div class="neuro-text">'+renderMarkdown(resp)+'</div>'
+      +'</div>';
+  }catch(e){
+    area.innerHTML = '<div class="sec" style="border-color:rgba(194,84,122,.3);"><div style="color:var(--rose);font-size:11px;">⚠️ '+e.message+'</div></div>';
+  }
+}
+
+async function runNeuroCustom(){
+  const v = document.getElementById('neuro-custom-input').value.trim();
+  if(!v) return;
+  await runNeuroResearch('_custom_');
+  const area = document.getElementById('neuro-research-result');
+  area.innerHTML = '<div class="loading-card"><div class="loading-orb">🔍</div><div class="loading-text">検索中...</div></div>';
+  try{
+    const resp = await callAI(v+'の最新研究をGoogle検索で調べ、嗅覚・香水・男性戦略への応用を200字程度で日本語で回答。', true);
+    const sid = _s(resp, v, 'neuro-research-result');
+    area.innerHTML = '<div class="neuro-box" style="margin:0 0 10px;">'
+      +'<div class="neuro-title">🔍 '+v+'</div>'
+      +'<div class="neuro-text">'+renderMarkdown(resp)+'</div>'
+      +'<button data-sid="'+sid+'" data-action="copy" style="margin-top:8px;padding:5px 12px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋 コピー</button>'
+      +'</div>';
+  }catch(e){area.innerHTML='<div class="sec"><div style="color:var(--rose);font-size:11px;">⚠️ '+e.message+'</div></div>';}
+}
+
+// ─── AIコーチ ───
+async function runNeuroCoach(){
+  const situation = (document.getElementById('coach-situation')||{}).value||'';
+  const goal = (document.getElementById('coach-goal')||{}).value||'calm';
+  const hormone = (document.getElementById('coach-hormone')||{}).value||'unknown';
+  const area = document.getElementById('neuro-coach-result');
+  if(!area) return;
+  area.innerHTML = '<div class="loading-card"><div class="loading-orb">🧠</div><div class="loading-text">最新脳科学論文を検索して個別アドバイスを生成中...</div><div class="loading-step"><span class="loader"></span>神経科学×香料分子×香水を統合解析</div></div>';
+
+  const goalMap = {calm:'扁桃体鎮静・緊張緩和',focus:'前頭前野活性・集中力向上',attract:'MHC増幅・性的魅力最大化',trust:'オキシトシン促進・信頼感構築',leader:'テストステロン×権威感',memory:'海馬への感情記憶定着'};
+  const hormoneMap = {high_t:'テストステロン高値',low_t:'テストステロン低値',stressed:'コルチゾール高値（ストレス状態）',relaxed:'リラックス状態',unknown:'ホルモン状態不明'};
+
+  const prompt = SYSTEM_SCENT+'\n\n【脳科学AIコーチ相談】\n'
+    +'状況：'+situation+'\n'
+    +'改善目標：'+goalMap[goal]+'\n'
+    +'現在のホルモン状態：'+hormoneMap[hormone]+'\n\n'
+    +'Google検索で最新の神経科学研究を確認した上で、\n'
+    +'①この状況に最適な香料分子と神経科学的根拠\n'
+    +'②具体的な推奨香水3選（ブランド・製品名・使用方法）\n'
+    +'③使用タイミングと量\n'
+    +'④今すぐできる1アクション\n'
+    +'を日本語で具体的にアドバイスしてください。';
+  try{
+    const resp = await callAI(prompt, true);
+    const sid = _s(resp, situation.substring(0,40)||'脳科学コーチ相談', 'neuro-coach-result');
+    area.innerHTML = '<div style="margin:0 12px;">'
+      +'<div style="background:linear-gradient(135deg,var(--vio-xl),rgba(124,80,192,0.06));border:1.5px solid rgba(124,80,192,.2);border-radius:var(--r3);padding:14px;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;">'
+      +'<div style="font-family:var(--fu);font-size:10px;font-weight:800;letter-spacing:2px;color:var(--vio);">🧠 脳科学AIコーチ</div>'
+      +'<div style="display:flex;gap:4px;">'
+      +'<button data-sid="'+sid+'" data-action="copy" style="padding:4px 10px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋 コピー</button>'
+      +'<button data-sid="'+sid+'" data-action="deep" style="padding:4px 10px;border-radius:var(--rf);background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔬 深堀り</button>'
+      +'</div></div>'
+      +'<div style="font-size:11px;color:var(--txt);line-height:1.9;">'+renderMarkdown(resp)+'</div>'
+      +'</div></div>';
+  }catch(e){area.innerHTML='<div class="sec" style="margin:0 12px;"><div style="color:var(--rose);font-size:11px;">⚠️ '+e.message+'</div></div>';}
+}
+
+function initNeuroCards(){
+  switchNeuroTab('map');
+}
+
+// ═══════════════════════════════════════════
+//  NAV
+// ═══════════════════════════════════════════
+function showPage(p){
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('tab-'+p).classList.add('active');
+}
+
+// ═══════════════════════════════════════════
+//  BUSINESS WOMEN — 取引先女性対応
+// ═══════════════════════════════════════════
+const SYSTEM_BIZ = `あなたは「GENESIS CODE」ビジネス版AIです。取引先・職場の女性に対して香りで信頼感・知性・洗練性を最大化する戦略の専門家です。
+以下を統合：
+・嗅覚神経科学（扁桃体0.03秒直達・コルチゾール低下・副交感神経賦活）
+・ビジネス心理学（第一印象形成・信頼構築・交渉心理）
+・世界三大調香師哲学（ジャン＝クロード・エレナの「減算の美学」を優先）
+・IFRA安全性基準（職場環境での適切な濃度）
+
+【ビジネス香水の絶対原則】
+・信頼感・清潔感・知性・洗練性を最優先
+・性的アピール成分（アンドロスタジエノン高配合）は禁忌
+・2プッシュ以内・密室配慮
+・相手に「この人は信頼できる」と無意識に感じさせる香料設計
+
+【応答JSON形式】必ずこのJSONのみ（前後テキスト不要）：
+{
+  "summary": "この状況への戦略コメント（120字以内）",
+  "dnaScore": ビジネス信頼スコア(0-100),
+  "scents": [
+    {
+      "rank": "S/A/B",
+      "score": 数値,
+      "brand": "ブランド名",
+      "name": "製品名",
+      "type": "EDP/EDT",
+      "perfumer": "調香師",
+      "year": 発売年,
+      "pyramid": {"top": "トップノート", "heart": "ハートノート", "base": "ベースノート"},
+      "molecules": ["主要分子1","分子2"],
+      "usage": {"sprays": "推奨数", "spots": "部位", "timing": "タイミング", "season": "季節"},
+      "layering": [{"type": "base/over", "product": "製品名", "desc": "効果"}],
+      "neuro": "信頼感・印象形成の神経科学的根拠（80字）",
+      "goodScenes": ["適合シーン1","シーン2"],
+      "badScenes": ["不適合シーン1"],
+      "ratings": {"attraction": 0, "trust": 信頼感数値, "clean": 清潔感数値, "leader": リーダー性数値, "mhc": 0}
+    }
+  ]
+}`;
+
+function buildBizPrompt(type, custom=''){
+  const now=new Date();
+  const ds=now.getFullYear()+"年"+(now.getMonth()+1)+"月"+now.getDate()+"日";
+  const season=['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][now.getMonth()];
+  const presets={
+    first_impression:`${ds}・${season}。取引先女性との初対面・初回商談。信頼感97点・清潔感100点・知的印象を与える香水3選。Google検索で現在の人気ビジネス向け香水を確認。ベルガモットFCF・サンダルウッド・クリーンムスク系を優先。2プッシュ以内使用前提。`,
+    negotiation:`${ds}・${season}。取引先女性との交渉・クロージング局面。「この人との契約は安心」という信頼感を香りで演出。シダーウッド×サンダルウッド×アンブロキサン低配合。Le Labo・Tom Ford系から3選。Google検索で確認。`,
+    relationship:`${ds}・${season}。取引先女性との関係構築・ランチ・カジュアル商談。親しみやすさ×プロフェッショナル感の両立。ローズウッド×ベルガモット×ムスク系で柔らかい知性を演出。3選。`,
+    executive:`${ds}・${season}。女性役員・部長クラスとの商談。権威ある女性に対して「対等・洗練・非威圧」を香りで表現。ジャン＝クロード・エレナ設計のミニマル処方系（Hermès・Diptyque等）3選。Google検索で確認。`,
+    conservative:`${ds}・${season}。金融・法律・医療など保守的業界の取引先女性。最も控えめ・清潔・格式あるビジネス香水3選。1〜2プッシュ前提。白檀×柚子×クリーンムスク系。`,
+    creative:`${ds}・${season}。広告・デザイン・IT等クリエイティブ業界の取引先女性。感度の高い相手に「洗練されたニッチ感」を香りで演出。ByredoやLe Laboのニッチフレグランス3選。Google検索で最新人気作品を確認。`,
+    custom:custom
+  };
+  return SYSTEM_BIZ+'\n\n'+(presets[type]||presets.custom);
+}
+
+function setAllBizDisabled(dis){
+  document.querySelectorAll('#page-biz button:not(.preset-sm)').forEach(b=>{
+    if(b.classList.contains('main-btn')||b.id==='biz-main-btn')b.disabled=dis;
+  });
+  document.querySelectorAll('#page-biz .preset-sm').forEach(b=>b.disabled=dis);
+}
+
+async function runBizAnalysis(){
+  const age=document.getElementById('biz-age').value;
+  const role=document.getElementById('biz-role').value;
+  const scene=document.getElementById('biz-scene').value;
+  const env=document.getElementById('biz-env').value;
+  const note=document.getElementById('biz-note').value;
+  const ageMap={'20s':'20代','30s':'30代','40s':'40代','50s':'50代以上'};
+  const roleMap={staff:'担当者',manager:'マネージャー',director:'部長・役員',ceo:'代表・社長'};
+  const sceneMap={first:'初対面・初回商談',nego:'交渉・クロージング',relation:'関係構築・ランチ',present:'プレゼン・提案',party:'会食・パーティー'};
+  const envMap={indoor:'屋内冷暖房環境',outdoor:'屋外・移動中',restaurant:'レストラン',formal:'フォーマル会場'};
+  showLoading('result-biz','💼','取引先女性の状況をGemini 2.5 Flashで解析中...','最適ビジネス香水を選定中');
+  const now=new Date();
+  const ds=now.getFullYear()+"年"+(now.getMonth()+1)+"月"+now.getDate()+"日";
+  const season=['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][now.getMonth()];
+  const prompt=SYSTEM_BIZ+`\n\n${ds}・${season}。
+【状況詳細】
+・相手：${ageMap[age]||age}・${roleMap[role]||role}
+・シーン：${sceneMap[scene]||scene}
+・環境：${envMap[env]||env}
+${note?'・特記：'+note:''}
+この状況に最適なビジネス向け香水3選をGoogle検索で最新情報を確認しながら選定。信頼感・清潔感・知性を最優先。`;
+  try{
+    const resp=await callAI(prompt,true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'result-biz');
+  }catch(e){showError('result-biz',e.message);}
+}
+
+async function runBizPreset(type){
+  document.querySelectorAll('#page-biz .preset-sm').forEach(b=>b.disabled=true);
+  showLoading('result-biz','💼','解析中...','最適ビジネス香水を選定');
+  try{
+    const resp=await callAI(buildBizPrompt(type),true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'result-biz');
+  }catch(e){showError('result-biz',e.message);}
+  document.querySelectorAll('#page-biz .preset-sm').forEach(b=>b.disabled=false);
+}
+
+async function runBizCustom(){
+  const v=document.getElementById('biz-custom-input').value.trim();
+  if(!v){alert('状況を入力してください');return;}
+  showLoading('result-biz','🔍','検索中...','解析中');
+  try{
+    const resp=await callAI(buildBizPrompt('custom',v),true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'result-biz');
+  }catch(e){showError('result-biz',e.message);}
+}
+
+// ═══════════════════════════════════════════
+//  CYCLE CALENDAR — SOLUNA移植版
+// ═══════════════════════════════════════════
+
+// 月相計算（SOLUNAから完全移植）
+const KNOWN_NM = new Date("2024-01-11T11:57:00Z");
+const LC = 29.53058867;
+function moonPhase(d){
+  d=d||new Date();
+  const p=(((d-KNOWN_NM)/86400000%LC)+LC)%LC;
+  if(p<1.85)return{emoji:"🌑",label:"新月",phase:0};
+  if(p<7.38)return{emoji:"🌒",label:"三日月",phase:1};
+  if(p<14.77)return{emoji:"🌓",label:"上弦",phase:2};
+  if(p<16.61)return{emoji:"🌕",label:"満月",phase:3};
+  return{emoji:"🌗",label:"下弦",phase:4};
+}
+
+// 5フェーズデータ
+const CYCLE_PHASES = [
+  {id:"menstrual",name:"月経期",days:"1〜5日目",emoji:"🩸",color:"#8b5cf6",
+   feeling:"疲労感・内向き・痛み・浄化感",
+   sexuality:"性欲：低〜最低。子宮収縮による不快感。安静が最優先。",
+   contraception:"月経中でも短周期では妊娠可能。精子は5日間生存するため注意。",
+   fertility:"妊娠確率ほぼゼロ。次排卵に向けた卵胞発育が始まっている。",
+   selfcare:"温かい飲み物・軽いストレッチ・無理な運動禁忌。",
+   scentStrategy:"【香水戦略】強い香りは嗅覚過敏に当たりやすい。ほぼ無香〜極軽量シトラスのみ推奨。サンダルウッドは鎮静効果で不快感軽減に有効。"},
+  {id:"follicular",name:"卵胞期",days:"6日目〜排卵3日前",emoji:"🌱",color:"#34d399",
+   feeling:"エネルギー増大・社交的・積極的・好奇心MAX",
+   sexuality:"性欲：上昇中。エストロゲン上昇が性的関心を高める。膣の潤滑も増加。",
+   contraception:"排卵が近づくほどリスク増大。排卵3〜5日前から要注意。",
+   fertility:"まだ妊娠確率は低め。排卵日に向けて精子を先行待機させる戦略が有効。",
+   selfcare:"黄金期。運動・学習・社交が最も効率よくできる時期。新しいことを始めるのに最適。",
+   scentStrategy:"【香水戦略】シトラス×フレッシュ×グリーンが最適。エネルギーと社交性を後押しするベルガモット・レモン系。フローラル軽めで好印象。"},
+  {id:"ovulation",name:"排卵期",days:"排卵前後3日",emoji:"✨",color:"#f43f5e",
+   feeling:"自信・魅力的・社交性MAX・攻撃性わずかに増加",
+   sexuality:"性欲：年間最高値。嗅覚感度+37%鋭敏化。MHC遺伝子選好が最大化。",
+   contraception:"最高リスク期間。排卵前後72時間が最も妊娠しやすい。",
+   fertility:"排卵2日前が最高確率（27〜31%/周期）。Wilcox 2000 NEJM。",
+   selfcare:"このエネルギーを最大活用。大切な決断・重要な交渉・創造的作業に最適。",
+   scentStrategy:"【香水戦略】嗅覚感度が年間最高値。アンドロスタジエノン含有香水が最大効果。ウッディ×スパイシー×アンバーで男性の遺伝的魅力を最大化。重ね付け戦略も有効。"},
+  {id:"luteal",name:"黄体期",days:"排卵後〜PMS前",emoji:"🍂",color:"#f59e0b",
+   feeling:"内向き・感情豊か・安心感への渇望",
+   sexuality:"性欲：低下傾向。安心感・温もり・親密さへの欲求が増す。",
+   contraception:"排卵後は当日を除き妊娠リスクは急低下。",
+   fertility:"着床の窓（排卵後6〜10日目）。プロゲステロンが子宮内膜を維持。",
+   selfcare:"内省・創造・整理の時間。温かい食事・早めの就寝が効果的。",
+   scentStrategy:"【香水戦略】サンダルウッド×バニラ×ムスクで安心感と包容力を演出。オキシトシン促進効果のある香料が最適。ジャスミン・ローズ系も有効。"},
+  {id:"pms",name:"PMS期",days:"生理5日前",emoji:"⛈",color:"#7c3aed",
+   feeling:"イライラ・不安・過敏・孤独感・浮腫み",
+   sexuality:"性欲：最低値か急上昇のどちらか。セロトニン低下による気分不安定。",
+   contraception:"次の月経が近いためリスクは低め。",
+   fertility:"プロゲステロン低下は着床失敗のシグナル。今周期は終了へ。",
+   selfcare:"マグネシウム300mg/日・VitB6・砂糖・カフェイン・アルコールを控える。軽い有酸素運動が有効。",
+   scentStrategy:"【香水戦略】刺激的な香りは逆効果。ラベンダー×カモミール×サンダルウッドで副交感神経を鎮静。香り薄めで使用量は平常時の半分以下。"},
+];
+
+// 周期計算エンジン（SOLUNA完全移植）
+function calcPhase(lastDate, cl, pl, targetDate){
+  cl=Math.round(cl||28); pl=Math.round(pl||5);
+  targetDate=targetDate||new Date();
+  const diff=Math.floor((targetDate-new Date(lastDate))/86400000);
+  const day=((diff%cl)+cl)%cl+1;
+  const ovDay=cl-14, pmsStart=cl-5;
+  let phase;
+  if(day<=pl)phase="menstrual";
+  else if(day<ovDay-2)phase="follicular";
+  else if(day<=ovDay+2)phase="ovulation";
+  else if(day>=pmsStart)phase="pms";
+  else phase="luteal";
+  const TIMING={"-5":10,"-4":14,"-3":18,"-2":27,"-1":31,"0":33,"1":12,"2":2};
+  const dayFromOv=day-ovDay;
+  const fertPct=day<=pl?0:(TIMING[String(dayFromOv)]||0);
+  const timingScore=Math.round(fertPct/0.33*100);
+  const sexScore=phase==="ovulation"?5:(phase==="follicular"&&day>=ovDay-3)?4:phase==="follicular"?3:(phase==="menstrual"&&day<=2)?1:phase==="menstrual"?2:phase==="pms"?1:3;
+  const moon=moonPhase(targetDate);
+  return{day,phase,ovDay,pmsStart,dayFromOv,fertPct,timingScore,sexScore,
+    daysToOvulation:day<ovDay?ovDay-day:null,
+    daysToNextPeriod:cl-day+1,
+    daysToNextPMS:day<pmsStart?pmsStart-day:null,
+    moon, cl, pl};
+}
+
+// 月相パターン補正
+function adjustedLastPeriod(lastDate, patternId){
+  if(patternId==="none"||!lastDate)return lastDate;
+  const targetPhaseMap={white:0, red:14.77, half_full:7.38, half_new:22.15};
+  const targetPhase=targetPhaseMap[patternId]||0;
+  let bestDate=new Date(lastDate), minDiff=999;
+  for(let offset=-14;offset<=14;offset++){
+    const td=new Date(lastDate); td.setDate(td.getDate()+offset);
+    const tp=(((td-KNOWN_NM)/86400000%LC)+LC)%LC;
+    const diff=Math.min(Math.abs(tp-targetPhase),LC-Math.abs(tp-targetPhase));
+    if(diff<minDiff){minDiff=diff;bestDate=new Date(td);}
+  }
+  return bestDate.toISOString().split('T')[0];
+}
+
+// STATE
+let cycleState = JSON.parse(localStorage.getItem('gc_cycle')||'null') || {
+  lastPeriod:'', cycleLen:28, periodLen:5, purpose:'self', pattern:'none'
+};
+let calViewMonth = new Date();
+let cycleInitialized = false;
+
+function saveCycleState(){
+  localStorage.setItem('gc_cycle', JSON.stringify(cycleState));
+}
+
+function applyCycleInput(){
+  const lp=document.getElementById('cy-last').value;
+  const cl=parseInt(document.getElementById('cy-len').value)||28;
+  const pl=parseInt(document.getElementById('cy-period').value)||5;
+  const pur=document.getElementById('cy-purpose').value;
+  cycleState={...cycleState, lastPeriod:lp, cycleLen:cl, periodLen:pl, purpose:pur};
+  saveCycleState();
+  renderCycleCalendar();
+  renderCyclePhasePanel();
+}
+
+function clearCycleInput(){
+  cycleState={...cycleState, lastPeriod:'', pattern:'none'};
+  saveCycleState();
+  document.getElementById('cy-last').value='';
+  renderCycleCalendar();
+  renderCyclePhasePanel();
+}
+
+function initCycle(){
+  if(cycleInitialized)return;
+  cycleInitialized=true;
+  if(cycleState.lastPeriod) document.getElementById('cy-last').value=cycleState.lastPeriod;
+  const lenSel=document.getElementById('cy-len');
+  if(lenSel) lenSel.value=cycleState.cycleLen||28;
+  document.getElementById('cy-period').value=cycleState.periodLen||5;
+  document.getElementById('cy-purpose').value=cycleState.purpose||'self';
+  renderCycleCalendar();
+  renderCyclePhasePanel();
+}
+
+// ─── 日本女性月経周期TOP10データ（産婦人科学会・厚労省統計ベース）───
+const JAPAN_CYCLE_TOP10 = [
+  {rank:1, days:28, pct:32, label:"最多・標準", note:"日本女性の約32%。教科書的な平均値。排卵は14日目。", color:"var(--gold)"},
+  {rank:2, days:30, pct:18, label:"やや長め", note:"約18%。ゆっくりした周期。排卵は16日目前後。", color:"var(--amb)"},
+  {rank:3, days:27, pct:12, label:"やや短め", note:"約12%。排卵は13日目前後。", color:"var(--teal)"},
+  {rank:4, days:29, pct:10, label:"28日に次ぐ多数", note:"約10%。排卵は15日目前後。", color:"var(--sage)"},
+  {rank:5, days:25, pct:7,  label:"短周期", note:"約7%。排卵は11日目前後。", color:"var(--rose)"},
+  {rank:6, days:32, pct:6,  label:"長周期", note:"約6%。排卵は18日目前後。", color:"var(--vio)"},
+  {rank:7, days:26, pct:5,  label:"やや短め", note:"約5%。排卵は12日目前後。", color:"#5090e0"},
+  {rank:8, days:35, pct:4,  label:"長周期・思春期多", note:"約4%。排卵は21日目前後。更年期・思春期にも多い。", color:"#e05090"},
+  {rank:9, days:24, pct:3,  label:"短周期・多め", note:"約3%。月経頻発の境界。産婦人科相談推奨。", color:"#e08020"},
+  {rank:10,days:33, pct:2,  label:"やや長周期", note:"約2%。", color:"#9090a0"},
+];
+
+// ─── カレンダー描画 ───
+function renderCycleCalendar(){
+  const hasPeriod=!!cycleState.lastPeriod;
+  const calArea=document.getElementById('cycle-calendar-area');
+  // 月相・TOP10は常時表示
+  renderMoonPatterns();
+  renderJapanTop10();
+  if(!hasPeriod){
+    calArea.innerHTML='';
+    return;
+  }
+  buildCalendarHTML(calArea, cycleState.lastPeriod, cycleState.cycleLen, cycleState.periodLen, cycleState.pattern||'none');
+}
+
+function buildCalendarHTML(area, lastPeriod, cl, pl, patternId){
+  const adjLast=adjustedLastPeriod(lastPeriod, patternId);
+  const year=calViewMonth.getFullYear(), month=calViewMonth.getMonth();
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const today=new Date();
+  const weekDays=["日","月","火","水","木","金","土"];
+  const phaseColors={menstrual:"#8b5cf6",follicular:"#34d399",ovulation:"#f43f5e",luteal:"#f59e0b",pms:"#7c3aed"};
+  const phaseEmoji={menstrual:"🩸",follicular:"🌱",ovulation:"✨",luteal:"🍂",pms:"⛈"};
+
+  // パターンタブ
+  const patternDefs=[
+    {id:"none",label:"自分の値",icon:"📅",color:"var(--txt2)"},
+    {id:"white",label:"新月派",icon:"🌑",color:"#60a5fa"},
+    {id:"red",label:"満月派",icon:"🌕",color:"var(--gold)"},
+    {id:"half_full",label:"上弦派",icon:"🌓",color:"var(--amb)"},
+    {id:"half_new",label:"下弦派",icon:"🌗",color:"var(--vio)"},
+  ];
+  // 表示タブ
+  const viewDefs=[
+    {id:"menstrual",label:"月経",icon:"🩸",color:"#8b5cf6"},
+    {id:"pregnancy",label:"妊娠",icon:"🌱",color:"#34d399"},
+    {id:"sexuality",label:"性欲",icon:"🔥",color:"#f43f5e"},
+    {id:"mind",label:"マインド",icon:"💭",color:"#a78bfa"},
+  ];
+  const curPat=patternDefs.find(p=>p.id===patternId)||patternDefs[0];
+  const curView=cycleState.viewTab||"menstrual";
+
+  let html=`<div class="sec" style="margin:0 12px 10px;">`;
+  // 月ナビ
+  html+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <button onclick="calPrev()" style="background:var(--bg3);border:1px solid var(--bor2);border-radius:7px;padding:5px 12px;color:var(--txt2);font-size:14px;cursor:pointer;">‹</button>
+    <div style="font-family:var(--fu);font-size:14px;font-weight:800;color:var(--txt);letter-spacing:1px;">${year}年${month+1}月</div>
+    <button onclick="calNext()" style="background:var(--bg3);border:1px solid var(--bor2);border-radius:7px;padding:5px 12px;color:var(--txt2);font-size:14px;cursor:pointer;">›</button>
+  </div>`;
+  // パターン選択
+  html+=`<div style="font-family:var(--fu);font-size:8px;color:var(--txt3);font-weight:700;letter-spacing:1.5px;margin-bottom:5px;">▶ 月相パターン</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:8px;">`;
+  patternDefs.forEach(p=>{
+    const active=patternId===p.id;
+    html+=`<button data-action="set-pat" data-pat="${p.id}" style="padding:6px 3px;border-radius:8px;border:1.5px solid ${active?p.color:'var(--bor)'};background:${active?'rgba(100,90,60,0.1)':'var(--bg3)'};color:${active?p.color:'var(--txt3)'};font-size:9px;font-weight:${active?700:400};cursor:pointer;text-align:center;">
+      <div style="font-size:14px;">${p.icon}</div>
+      <div style="font-size:8px;margin-top:2px;">${p.label}</div>
+    </button>`;
+  });
+  html+=`</div>`;
+  // 表示タブ
+  html+=`<div style="font-family:var(--fu);font-size:8px;color:var(--txt3);font-weight:700;letter-spacing:1.5px;margin-bottom:5px;">▶ 表示切替</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px;">`;
+  viewDefs.forEach(v=>{
+    const active=curView===v.id;
+    html+=`<button data-action="set-view" data-view="${v.id}" style="padding:6px 3px;border-radius:8px;border:1.5px solid ${active?v.color:'var(--bor)'};background:${active?v.color+'20':'var(--bg3)'};color:${active?v.color:'var(--txt3)'};font-size:9px;font-weight:${active?700:400};cursor:pointer;text-align:center;">
+      <div style="font-size:13px;">${v.icon}</div>
+      <div style="font-size:8px;margin-top:2px;">${v.label}</div>
+    </button>`;
+  });
+  html+=`</div>`;
+
+  // 曜日ヘッダー
+  html+=`<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:3px;">`;
+  weekDays.forEach((w,i)=>{
+    html+=`<div style="text-align:center;font-family:var(--fu);font-size:9px;color:${i===0?'#e05050':i===6?'#5090e0':'var(--txt3)'};padding:3px 0;">${w}</div>`;
+  });
+  html+=`</div>`;
+
+  // カレンダーグリッド
+  html+=`<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">`;
+  for(let i=0;i<firstDay;i++) html+=`<div style="min-height:52px;"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const dateObj=new Date(year,month,d);
+    const isToday=dateObj.toDateString()===today.toDateString();
+    const cp=calcPhase(adjLast,cl,pl,dateObj);
+    const phC=phaseColors[cp.phase]||'#aaa';
+    const phE=phaseEmoji[cp.phase]||'';
+    const moon=moonPhase(dateObj);
+    let mainEmoji=phE, subText='', subColor=phC;
+    if(curView==='pregnancy'){
+      const PMAP={"-5":10,"-4":14,"-3":18,"-2":27,"-1":31,"0":33,"1":12,"2":2};
+      const pr=PMAP[String(cp.dayFromOv)]||0;
+      mainEmoji=pr>=30?"❤️‍🔥":pr>=20?"🔴":pr>=10?"🟥":pr>0?"🟧":"⬜";
+      subText=pr>0?pr+"%":'';
+      subColor=pr>=20?"#ec4899":pr>=10?"#dc2626":pr>0?"#d97706":"#9ca3af";
+    } else if(curView==='sexuality'){
+      const sx=cp.sexScore;
+      mainEmoji=["❄️","💙","💚","💛","🧡","🔥"][sx];
+      subText=["極低","低","普通","やや高","高","最高"][sx];
+      subColor=["#60a5fa","#60a5fa","#34d399","#f59e0b","#f97316","#f43f5e"][sx];
+    } else if(curView==='mind'){
+      const mindMap={menstrual:"🌧️",follicular:"🌱",ovulation:"✨",luteal:"🍁",pms:"⛈️"};
+      mainEmoji=mindMap[cp.phase]||"";
+      subText={menstrual:"内省",follicular:"芽生え",ovulation:"絶頂",luteal:"充足",pms:"嵐前"}[cp.phase]||"";
+    } else {
+      subText=moon.emoji;
+      subColor="var(--txt3)";
+    }
+    html+=`<div onclick="onDayClick(${d},${year},${month})" style="border-radius:8px;background:${phC}18;border:${isToday?'2.5px solid '+phC:'1.5px solid '+phC+'44'};display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 1px;min-height:52px;cursor:pointer;transition:transform .1s;"><div style="font-family:var(--fu);font-size:10px;font-weight:${isToday?800:500};color:${isToday?phC:'var(--txt)'};line-height:1;">${d}</div><div style="font-size:14px;line-height:1;margin:1px 0;">${mainEmoji}</div><div style="font-size:8px;color:${subColor};font-weight:600;line-height:1;text-align:center;">${subText}</div></div>`;
+  }
+  html+=`</div>`;
+
+  // 凡例
+  html+=`<div style="margin-top:9px;padding:8px 10px;background:var(--bg3);border-radius:9px;">
+    <div style="font-family:var(--fu);font-size:8px;color:var(--txt3);font-weight:700;letter-spacing:1.5px;margin-bottom:5px;">凡例</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">`;
+  if(curView==='menstrual'){
+    [["🩸","月経","#8b5cf6"],["🌱","卵胞","#34d399"],["✨","排卵","#f43f5e"],["🍂","黄体","#f59e0b"],["⛈","PMS","#7c3aed"]].forEach(([e,l,c])=>{
+      html+=`<span style="font-size:9px;color:${c};font-weight:700;">${e}${l}</span>`;
+    });
+  } else if(curView==='pregnancy'){
+    [["❤️‍🔥","最高"],["🔴","高"],["🟥","中"],["🟧","やや低"],["⬜","ほぼ0"]].forEach(([e,l])=>{
+      html+=`<span style="font-size:9px;color:var(--txt2);">${e}${l}</span>`;
+    });
+  } else if(curView==='sexuality'){
+    [["🔥","最高"],["🧡","高"],["💛","やや高"],["💚","普通"],["💙","低"],["❄️","極低"]].forEach(([e,l])=>{
+      html+=`<span style="font-size:9px;color:var(--txt2);">${e}${l}</span>`;
+    });
+  } else if(curView==='mind'){
+    [["✨","絶頂"],["🌱","芽生え"],["🍁","充足"],["🌀","揺れ"],["🌧️","内省"],["⛈️","嵐前"]].forEach(([e,l])=>{
+      html+=`<span style="font-size:9px;color:var(--txt2);">${e}${l}</span>`;
+    });
+  }
+  html+=`</div></div>`;
+  html+=`</div>`; // sec
+
+  area.innerHTML=html;
+}
+
+function calPrev(){calViewMonth=new Date(calViewMonth.getFullYear(),calViewMonth.getMonth()-1,1);renderCycleCalendar();}
+function calNext(){calViewMonth=new Date(calViewMonth.getFullYear(),calViewMonth.getMonth()+1,1);renderCycleCalendar();}
+function setCyclePattern(p){cycleState.pattern=p;saveCycleState();renderCycleCalendar();}
+function setCycleView(v){cycleState.viewTab=v;saveCycleState();renderCycleCalendar();}
+
+function onDayClick(d,year,month){
+  if(!cycleState.lastPeriod)return;
+  const adjLast=adjustedLastPeriod(cycleState.lastPeriod,cycleState.pattern||'none');
+  const dateObj=new Date(year,month,d);
+  const cp=calcPhase(adjLast,cycleState.cycleLen,cycleState.periodLen,dateObj);
+  const phDef=CYCLE_PHASES.find(p=>p.id===cp.phase)||CYCLE_PHASES[0];
+  const moon=moonPhase(dateObj);
+  renderDayDetail(d,year,month,cp,phDef,moon);
+}
+
+function renderDayDetail(d,year,month,cp,phDef,moon){
+  const panel=document.getElementById('cycle-phase-panel');
+  const purpose=cycleState.purpose||'self';
+  const purposeLabel={self:"自分用（恋愛戦略）",partner:"パートナー管理",business:"取引先女性対応"}[purpose];
+  panel.innerHTML=`
+    <div class="sec" style="margin:0 12px 10px;border-color:${phDef.color}44;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="font-size:28px;">${phDef.emoji}</div>
+        <div>
+          <div style="font-family:var(--fu);font-size:16px;font-weight:900;color:${phDef.color};letter-spacing:1px;">${phDef.name}</div>
+          <div style="font-size:10px;color:var(--txt2);">${year}年${month+1}月${d}日 — 周期${cp.day}日目 ${moon.emoji}${moon.label}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+        ${cp.daysToOvulation!==null?`<div style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);border-radius:9px;padding:8px;text-align:center;"><div style="font-family:var(--fu);font-size:8px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:3px;">排卵まで</div><div style="font-family:var(--fu);font-size:18px;font-weight:900;color:#f43f5e;">${cp.daysToOvulation}<span style="font-size:10px;">日</span></div></div>`:''}
+        <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:9px;padding:8px;text-align:center;"><div style="font-family:var(--fu);font-size:8px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:3px;">次の生理まで</div><div style="font-family:var(--fu);font-size:18px;font-weight:900;color:#8b5cf6;">${cp.daysToNextPeriod}<span style="font-size:10px;">日</span></div></div>
+        <div style="background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.15);border-radius:9px;padding:8px;text-align:center;"><div style="font-family:var(--fu);font-size:8px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:3px;">妊娠確率</div><div style="font-family:var(--fu);font-size:18px;font-weight:900;color:#f43f5e;">${cp.fertPct<1?'ほぼ0':cp.fertPct+'%'}</div></div>
+        <div style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:9px;padding:8px;text-align:center;"><div style="font-family:var(--fu);font-size:8px;color:var(--txt3);font-weight:700;letter-spacing:1px;margin-bottom:3px;">性欲スコア</div><div style="font-family:var(--fu);font-size:18px;font-weight:900;color:#f97316;">${"🔥🔥🔥🔥🔥".slice(0,(cp.sexScore||1)*2)}</div></div>
+      </div>
+      ${[
+        ["💭 感情・状態",phDef.feeling,"var(--txt2)"],
+        ["🔥 性欲",phDef.sexuality,"#f43f5e"],
+        ["🛡 避妊",phDef.contraception,"var(--teal)"],
+        ["🌱 妊活",phDef.fertility,"var(--sage)"],
+        ["💜 セルフケア",phDef.selfcare,"var(--rose)"],
+        ["🌕 月相",moon.emoji+" "+moon.label+" — 周期との関係","var(--vio)"],
+      ].map(([l,v,c])=>`<div style="margin-bottom:6px;padding:8px 10px;background:var(--bg3);border-radius:9px;border-left:3px solid ${c};">
+        <div style="font-family:var(--fu);font-size:8px;font-weight:700;letter-spacing:1.5px;color:${c};margin-bottom:3px;">${l}</div>
+        <div style="font-size:10px;color:var(--txt);line-height:1.7;">${v}</div>
+      </div>`).join('')}
+      <div style="margin-top:8px;padding:10px 12px;background:linear-gradient(135deg,var(--gold-xl),rgba(184,130,10,0.06));border-radius:10px;border:1px solid rgba(184,130,10,0.2);">
+        <div style="font-family:var(--fu);font-size:8px;font-weight:700;letter-spacing:2px;color:var(--gold);margin-bottom:5px;">🧬 ${purposeLabel}向け香水戦略</div>
+        <div style="font-size:10px;color:var(--txt);line-height:1.75;">${phDef.scentStrategy}</div>
+      </div>
+      <button data-action="cycle-scent" data-phase="${cp.phase}" data-pname="${phDef.name}" data-patname="" style="width:100%;margin-top:10px;padding:12px;background:linear-gradient(135deg,${phDef.color},${phDef.color}cc);border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-size:13px;font-weight:900;cursor:pointer;letter-spacing:1px;box-shadow:0 3px 12px ${phDef.color}44;">
+        💎 ${phDef.name}に最適な香水をAI解析
+      </button>
+    </div>`;
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ─── 日本TOP10レンダリング ───
+function renderJapanTop10(){
+  const area=document.getElementById('japan-top10-cards');
+  if(!area)return;
+  const today=new Date();
+  area.innerHTML=JAPAN_CYCLE_TOP10.map(d=>{
+    const guessStart=new Date(today.getFullYear(),today.getMonth(),1);
+    const guessAdj=guessStart.toISOString().split('T')[0];
+    const cp=calcPhase(guessAdj,d.days,5,today);
+    const phDef=CYCLE_PHASES.find(p=>p.id===cp.phase)||CYCLE_PHASES[0];
+    const setLabel=`${d.days}日周期 TOP${d.rank}`;
+    return`<div style="background:var(--sur);border:1.5px solid ${d.color}44;border-radius:var(--r2);padding:10px 10px 8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+        <div style="font-family:var(--fu);font-size:20px;font-weight:900;color:${d.color};line-height:1;">${d.days}<span style="font-size:10px;">日</span></div>
+        <div style="font-family:var(--fu);font-size:8px;font-weight:700;padding:2px 7px;border-radius:var(--rf);background:${d.color}18;color:${d.color};border:1px solid ${d.color}33;">TOP${d.rank}・${d.pct}%</div>
+      </div>
+      <div style="font-family:var(--fu);font-size:9px;font-weight:700;color:var(--txt2);margin-bottom:3px;">${d.label}</div>
+      <div style="font-size:9px;color:var(--txt3);line-height:1.55;margin-bottom:6px;">${d.note}</div>
+      <div style="background:${phDef.color}15;border:1px solid ${phDef.color}30;border-radius:7px;padding:4px 7px;margin-bottom:6px;">
+        <div style="font-size:9px;font-weight:700;color:${phDef.color};">${phDef.emoji} 今月1日起算で「${phDef.name}」</div>
+      </div>
+      <button data-action="set-cycle" data-date="${guessAdj}" data-len="${d.days}" data-label="${setLabel}"
+        style="width:100%;padding:8px;background:${d.color};border:none;border-radius:8px;color:#fff;font-family:var(--fu);font-size:10px;font-weight:900;cursor:pointer;letter-spacing:.5px;box-shadow:0 2px 8px ${d.color}44;">
+        📌 この周期をセット
+      </button>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+//  周期同期 共通関数（どこからでもタップ1発でセット）
+// ═══════════════════════════════════════════
+function setCycleSync(lastPeriod, cycleLen, label){
+  cycleState.lastPeriod=lastPeriod;
+  cycleState.cycleLen=parseInt(cycleLen)||28;
+  const lastEl=document.getElementById('cy-last');
+  const lenEl=document.getElementById('cy-len');
+  if(lastEl) lastEl.value=lastPeriod;
+  if(lenEl) lenEl.value=cycleState.cycleLen;
+  saveCycleState();
+  renderCycleCalendar();
+  renderCyclePhasePanel();
+  // トースト通知
+  showCycleToast('✅ 周期をセットしました：'+label);
+  // 周期タブへ自動スクロール（カレンダーへ）
+  const calArea=document.getElementById('cycle-calendar-area');
+  if(calArea) setTimeout(()=>calArea.scrollIntoView({behavior:'smooth',block:'start'}),300);
+}
+
+function showCycleToast(msg){
+  let t=document.getElementById('cycle-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='cycle-toast';
+    t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(--vio),#a07ae0);color:#fff;font-family:var(--fu);font-size:11px;font-weight:700;letter-spacing:.5px;padding:10px 20px;border-radius:var(--rf);box-shadow:0 4px 20px rgba(124,80,192,.4);z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(10px)';},2500);
+}
+
+function selectJapanCycle(days){
+  const today=new Date();
+  const guessStart=new Date(today.getFullYear(),today.getMonth(),1).toISOString().split('T')[0];
+  setCycleSync(guessStart, days, days+'日周期（今月1日起算）');
+}
+
+// ─── Gemini AI 推測：4フェーズ全パターン香水提案 ───
+async function runGeminiCycleGuess(){
+  const btn=document.getElementById('gemini-guess-btn');
+  const area=document.getElementById('gemini-guess-result');
+  btn.disabled=true;
+  btn.innerHTML='<span class="loader-d"></span>Gemini 2.5 Flashで推測中...';
+  area.innerHTML=`<div class="loading-card" style="margin:0 12px 10px;"><div class="loading-orb">🤖</div><div class="loading-text">今日の日付・月相・季節から日本女性の月経周期統計を参照しGeminiが推測解析中...</div><div class="loading-step"><span class="loader"></span>4フェーズ×香水提案を生成中</div></div>`;
+
+  const today=new Date();
+  const todayMoon=moonPhase(today);
+  const ds=today.getFullYear()+"年"+(today.getMonth()+1)+"月"+today.getDate()+"日";
+  const season=['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][today.getMonth()];
+  const weekday=['日','月','火','水','木','金','土'][today.getDay()];
+
+  // システムプロンプト：4フェーズ全部をJSONで返す
+  const SYSTEM_GUESS=`あなたは月経周期×嗅覚神経科学の専門AIです。
+日本女性の月経周期統計（最新）をGoogle検索で確認し、今日の日付・月相から最も確率の高い月経フェーズを推測します。
+
+【今日のデータ】
+・日付：${ds}（${weekday}曜日）
+・季節：${season}
+・月相：${todayMoon.emoji}${todayMoon.label}（月齢から計算済み）
+・日本女性の月経周期最多分布：28日（32%）・30日（18%）・27日（12%）・29日（10%）・25日（7%）
+
+【出力フォーマット】必ずJSONのみ（前後テキスト不要）：
+{
+  "todayAnalysis": "今日の推測根拠コメント（100字以内）",
+  "mostLikelyPhase": "最有力フェーズ名",
+  "moonInfo": "月相との関係説明（50字）",
+  "patterns": [
+    {
+      "patternName": "新月スタートパターン（ホワイトムーン）",
+      "moonIcon": "🌑",
+      "cycleDay": 今日が何日目か（数値）,
+      "phase": "フェーズID（menstrual/follicular/ovulation/luteal/pms）",
+      "phaseName": "フェーズ名",
+      "phaseEmoji": "絵文字",
+      "probability": 確率パーセント(0-100),
+      "hormoneNow": "今日のホルモン状態（40字）",
+      "scentStrategy": "香水戦略コメント（60字）",
+      "topScent": "最適香水ブランド・製品名",
+      "topScentReason": "選定理由（40字）"
+    },
+    {
+      "patternName": "満月スタートパターン（レッドムーン）",
+      "moonIcon": "🌕",
+      ...同形式...
+    },
+    {
+      "patternName": "上弦スタートパターン",
+      "moonIcon": "🌓",
+      ...同形式...
+    },
+    {
+      "patternName": "下弦スタートパターン",
+      "moonIcon": "🌗",
+      ...同形式...
+    }
+  ]
+}`;
+
+  try{
+    const resp=await callAI(SYSTEM_GUESS+'\n\n今日'+ds+'の月相'+todayMoon.label+'をもとに、日本女性の月経周期統計をGoogle検索で最新情報確認の上、4パターン分析と各パターン最適香水を提案してください。',true);
+    const data=parseJSON(resp);
+    renderGeminiGuessResult(data, area, ds, todayMoon);
+  }catch(e){
+    area.innerHTML=`<div class="sec" style="margin:0 12px 10px;border-color:rgba(194,84,122,.3);"><div style="color:var(--rose);font-size:11px;">⚠️ ${e.message}</div></div>`;
+  }
+  btn.disabled=false;
+  btn.innerHTML='🤖 今日の月経フェーズをGeminiで推測して4パターン提案';
+}
+
+function renderGeminiGuessResult(data, area, ds, moon){
+  if(!data||!data.patterns){
+    area.innerHTML='<div class="empty"><div class="empty-i">🤖</div>推測データを取得できませんでした</div>';
+    return;
+  }
+  const phColors={menstrual:'#8b5cf6',follicular:'#34d399',ovulation:'#f43f5e',luteal:'#f59e0b',pms:'#7c3aed'};
+  const phEmoji={menstrual:'🩸',follicular:'🌱',ovulation:'✨',luteal:'🍂',pms:'⛈'};
+
+  let html='<div style="margin:0 12px 10px;">';
+
+  html+='<div style="background:linear-gradient(135deg,var(--vio-xl),rgba(124,80,192,0.08));border:1.5px solid rgba(124,80,192,.2);border-radius:var(--r3);padding:14px;margin-bottom:10px;">';
+  html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:24px;">🤖</span><div>';
+  html+='<div style="font-family:var(--fu);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--vio);">GEMINI 推測結果 — '+ds+'</div>';
+  html+='<div style="font-size:10px;color:var(--txt2);margin-top:2px;">'+moon.emoji+moon.label+' / 最有力：'+(data.mostLikelyPhase||'不明')+'</div>';
+  html+='</div></div>';
+  html+='<div style="font-size:11px;color:var(--txt);line-height:1.8;background:rgba(255,255,255,0.6);border-radius:9px;padding:9px 11px;">'+(data.todayAnalysis||'')+'</div>';
+  if(data.moonInfo) html+='<div style="margin-top:7px;font-size:10px;color:var(--vio);font-weight:600;">'+moon.emoji+' '+data.moonInfo+'</div>';
+  html+='</div>';
+
+  html+='<div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--txt3);margin-bottom:8px;">▶ 月相4パターン別 フェーズ＋香水提案</div>';
+
+  (data.patterns||[]).forEach(function(p,i){
+    const phC=phColors[p.phase]||'#888';
+    const phE=phEmoji[p.phase]||'💫';
+    const probColor=p.probability>=40?'var(--gold)':p.probability>=25?'var(--teal)':'var(--txt3)';
+    const patMoonMap={white:0,red:14.77,half_full:7.38,half_new:22.15};
+    const patKey=['white','red','half_full','half_new'][i]||'white';
+    const targetPhase=patMoonMap[patKey]||0;
+    const today2=new Date();
+    let nearDate=new Date(today2),minDiff2=999;
+    for(let off=-20;off<=10;off++){
+      const td=new Date(today2); td.setDate(td.getDate()+off);
+      const tp=(((td-KNOWN_NM)/86400000%LC)+LC)%LC;
+      const diff=Math.min(Math.abs(tp-targetPhase),LC-Math.abs(tp-targetPhase));
+      if(diff<minDiff2){minDiff2=diff;nearDate=new Date(td);}
+    }
+    const nearStr=nearDate.toISOString().split('T')[0];
+    const setLabelSafe=((p.moonIcon||'')+(p.patternName||'')+' / '+nearStr+'起算').replace(/['"]/g,'');
+    const topScentSafe=(p.topScent||'').replace(/['"]/g,'');
+    const phaseNameSafe=(p.phaseName||'').replace(/['"]/g,'');
+    const patternNameSafe=(p.patternName||'').replace(/['"]/g,'');
+
+    html+='<div style="background:var(--sur);border:1.5px solid '+phC+'44;border-radius:var(--r2);padding:12px;margin-bottom:8px;position:relative;overflow:hidden;">';
+    html+='<div style="position:absolute;top:0;left:0;bottom:0;width:4px;background:linear-gradient(180deg,'+phC+','+phC+'88);border-radius:var(--r2) 0 0 var(--r2);"></div>';
+    html+='<div style="padding-left:8px;">';
+    html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">';
+    html+='<div style="display:flex;align-items:center;gap:7px;">';
+    html+='<span style="font-size:20px;">'+(p.moonIcon||'🌙')+'</span>';
+    html+='<div>';
+    html+='<div style="font-family:var(--fu);font-size:11px;font-weight:800;color:var(--txt);letter-spacing:.5px;">'+(p.patternName||'')+'</div>';
+    html+='<div style="font-size:10px;color:'+phC+';font-weight:700;">'+phE+' '+(p.phaseName||'')+' '+(p.cycleDay?'('+p.cycleDay+'日目)':'')+'</div>';
+    html+='</div></div>';
+    html+='<div style="text-align:right;">';
+    html+='<div style="font-family:var(--fu);font-size:20px;font-weight:900;color:'+probColor+';line-height:1;">'+(p.probability||0)+'<span style="font-size:9px;">%</span></div>';
+    html+='<div style="font-family:var(--fu);font-size:8px;color:var(--txt3);">確率</div>';
+    html+='</div></div>';
+    if(p.hormoneNow) html+='<div style="font-size:10px;color:var(--txt2);background:'+phC+'10;border-radius:7px;padding:6px 9px;margin-bottom:6px;">🔬 '+p.hormoneNow+'</div>';
+    if(p.scentStrategy) html+='<div style="font-size:10px;color:var(--txt);background:var(--gold-xl);border-radius:7px;padding:6px 9px;margin-bottom:6px;border-left:3px solid var(--gold);">✦ '+p.scentStrategy+'</div>';
+    if(p.topScent){
+      html+='<div style="background:linear-gradient(135deg,'+phC+'12,var(--sur2));border:1px solid '+phC+'30;border-radius:9px;padding:9px 11px;margin-bottom:8px;">';
+      html+='<div style="font-family:var(--fu);font-size:8px;font-weight:700;letter-spacing:1.5px;color:'+phC+';margin-bottom:4px;">💎 推奨香水</div>';
+      html+='<div style="font-family:var(--fd);font-size:14px;font-weight:600;color:var(--txt);">'+p.topScent+'</div>';
+      if(p.topScentReason) html+='<div style="font-size:9px;color:var(--txt2);margin-top:3px;">'+p.topScentReason+'</div>';
+      html+='</div>';
+    }
+    html+='<button data-action="set-cycle" data-date="'+nearStr+'" data-len="28" data-label="'+setLabelSafe+'" style="width:100%;padding:9px;border-radius:9px;background:'+phC+';border:none;color:#fff;font-family:var(--fu);font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.5px;margin-bottom:6px;box-shadow:0 3px 10px '+phC+'44;">📌 この周期を入力欄にセット</button>';
+    html+='<div style="display:flex;gap:5px;">';
+    html+='<button data-action="google-scent" data-query="'+topScentSafe+' 香水 購入 価格" style="flex:1;padding:6px;border-radius:8px;background:var(--gold-xl);border:1px solid rgba(184,130,10,.2);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔍 Google</button>';
+    html+='<button data-action="cycle-scent" data-phase="'+p.phase+'" data-pname="'+phaseNameSafe+'" data-patname="'+patternNameSafe+'" style="flex:1;padding:6px;border-radius:8px;background:'+phC+'15;border:1px solid '+phC+'30;color:'+phC+';font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">💎 詳細3選</button>';
+    html+='<button data-action="deep-scent" data-query="'+phaseNameSafe+' '+topScentSafe+' 香水 詳細" data-area="gemini-guess-result" style="flex:1;padding:6px;border-radius:8px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔬 深堀り</button>';
+    html+='</div></div></div>';
+  });
+
+  html+='</div>';
+  area.innerHTML=html;
+  area.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// Gemini推測結果から詳細香水3選を解析
+async function runCycleScentAIFromGuess(phaseId, phaseName, patternName){
+  const area=document.getElementById('gemini-guess-result');
+  // 既存のcycle-scent-areaを使う
+  const scentArea=document.getElementById('cycle-scent-area');
+  showLoading('cycle-scent-area','💎',phaseName+'（'+patternName+'）の最適香水をGemini解析中...','香料分子×ホルモン最適化');
+  const purpose=cycleState.purpose||'self';
+  const purposeMap={self:'男性が恋愛戦略に使う香水',partner:'パートナー女性の状態に合わせた香水',business:'取引先女性対応ビジネス香水'};
+  const now=new Date();
+  const nowStr=now.getFullYear()+"年"+(now.getMonth()+1)+"月"+now.getDate()+"日";
+  const scentHint=CYCLE_PHASES.find(p=>p.id===phaseId)?.scentStrategy||'';
+  const prompt=SYSTEM_SCENT+"\n\n"+nowStr+"。\n【推測フェーズ】"+phaseName+"（"+patternName+"）\n【用途】"+purposeMap[purpose]+"\n"+scentHint+"\nこのフェーズに最適な香水3選をGoogle検索で最新情報確認しながら選定。";
+  try{
+    const resp=await callAI(prompt,true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'cycle-scent-area');
+    document.getElementById('cycle-scent-area').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }catch(e){showError('cycle-scent-area',e.message);}
+}
+function renderMoonPatterns(){
+  const area=document.getElementById('moon-pattern-cards');
+  const today=new Date();
+  const patterns=[
+    {id:"white",label:"新月スタート",icon:"🌑",color:"#60a5fa",desc:"月経が新月に始まるパターン（最多32〜40%）。浄化・リセットのエネルギー。排卵が満月と重なる。"},
+    {id:"red",label:"満月スタート",icon:"🌕",color:"var(--gold)",desc:"月経が満月に始まるパターン（20〜25%）。古代の癒し手に多い。排卵が新月と重なる。"},
+    {id:"half_full",label:"上弦スタート",icon:"🌓",color:"var(--amb)",desc:"月経が上弦の月に始まるパターン。膨らんでいくエネルギーの時期にスタート。"},
+    {id:"half_new",label:"下弦スタート",icon:"🌗",color:"var(--vio)",desc:"月経が下弦の月に始まるパターン。内省・統合のエネルギーが月経と重なる。"},
+  ];
+  // 今日の月相から最近の各パターン開始日を推定
+  const todayMoon=moonPhase(today);
+  area.innerHTML=patterns.map(p=>{
+    const targetPhaseMap={white:0,red:14.77,half_full:7.38,half_new:22.15};
+    const target=targetPhaseMap[p.id]||0;
+    let nearDate=new Date(today), minDiff=999;
+    for(let off=-15;off<=15;off++){
+      const td=new Date(today); td.setDate(td.getDate()+off);
+      const tp=(((td-KNOWN_NM)/86400000%LC)+LC)%LC;
+      const diff=Math.min(Math.abs(tp-target),LC-Math.abs(tp-target));
+      if(diff<minDiff){minDiff=diff;nearDate=new Date(td);}
+    }
+    const nearStr=nearDate.toISOString().split('T')[0];
+    const nearDisp=(nearDate.getMonth()+1)+"/"+nearDate.getDate();
+    const adjStart=nearStr;
+    const todayPhase=calcPhase(adjStart,28,5,today);
+    const todayPhaseDef=CYCLE_PHASES.find(ph=>ph.id===todayPhase.phase)||CYCLE_PHASES[0];
+    const setLabelM=(p.icon+p.label+' / '+nearDisp+'起算').replace(/[^\w\s\u3000-\u9fff\u30a0-\u30ff\u3040-\u309f\-\/]/g,'');
+    return`<div style="background:var(--sur);border:1.5px solid ${p.color}44;border-radius:var(--r2);padding:11px;">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">
+        <span style="font-size:22px;">${p.icon}</span>
+        <div>
+          <div style="font-family:var(--fu);font-size:11px;font-weight:800;color:${p.color};letter-spacing:1px;">${p.label}</div>
+          <div style="font-size:9px;color:var(--txt3);">直近起点：${nearDisp}</div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--txt2);line-height:1.7;margin-bottom:7px;">${p.desc}</div>
+      <div style="background:${todayPhaseDef.color}15;border:1px solid ${todayPhaseDef.color}33;border-radius:7px;padding:5px 8px;margin-bottom:7px;">
+        <div style="font-size:9px;font-weight:700;color:${todayPhaseDef.color};">${todayPhaseDef.emoji} このパターンなら今日は「${todayPhaseDef.name}」</div>
+      </div>
+      <button data-action="set-cycle" data-date="${nearStr}" data-len="28" data-label="${setLabelM}"
+        style="width:100%;padding:9px;background:${p.color};border:none;border-radius:9px;color:#fff;font-family:var(--fu);font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.5px;box-shadow:0 3px 10px ${p.color}44;">
+        📌 この周期をセット
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function selectMoonPattern(patternId, startDate){
+  cycleState.lastPeriod=startDate;
+  cycleState.pattern=patternId;
+  document.getElementById('cy-last').value=startDate;
+  saveCycleState();
+  renderCycleCalendar();
+  renderCyclePhasePanel();
+}
+
+// ─── 今日のフェーズパネル（ページ上部） ───
+function renderCyclePhasePanel(){
+  if(!cycleState.lastPeriod)return;
+  const adjLast=adjustedLastPeriod(cycleState.lastPeriod,cycleState.pattern||'none');
+  const today=new Date();
+  const cp=calcPhase(adjLast,cycleState.cycleLen,cycleState.periodLen,today);
+  const phDef=CYCLE_PHASES.find(p=>p.id===cp.phase)||CYCLE_PHASES[0];
+  const moon=moonPhase(today);
+  renderDayDetail(today.getDate(),today.getFullYear(),today.getMonth(),cp,phDef,moon);
+}
+
+// ─── フェーズ別AI香水解析 ───
+async function runCycleScentAI(phaseId, phaseName){
+  const area=document.getElementById('cycle-scent-area');
+  showLoading('cycle-scent-area','💎','フェーズ別最適香水をGemini 2.5 Flashで解析中...','香料分子×ホルモン最適化');
+  const purpose=cycleState.purpose||'self';
+  const purposeMap={
+    self:"男性が女性の月経周期に合わせて使う恋愛戦略香水（自分用）",
+    partner:"パートナー女性の状態に合わせた関係強化・アプローチ戦略香水",
+    business:"取引先女性・職場女性への印象最適化（ビジネス・信頼感・プロ印象）香水"
+  };
+  const now=new Date();
+  const ds=now.getFullYear()+"年"+(now.getMonth()+1)+"月"+now.getDate()+"日";
+  const season=['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][now.getMonth()];
+  const prompt=SYSTEM_SCENT+"\n\n"+ds+"・"+season+"。\n【状況】対象女性の月経周期フェーズ："+phaseName+"\n【用途】"+purposeMap[purpose]+"\n【フェーズの特性】"+(CYCLE_PHASES.find(p=>p.id===phaseId)?.scentStrategy||"")+"\nこの状況に最適な男性用香水3選をGoogle検索で最新情報を確認しながら選定してください。\nフェーズの女性ホルモン状態・嗅覚感度・MHC感受性を最大限考慮。\n"+(purpose==="business"?"ビジネス目的のため、清潔感・信頼感・知性を最優先。過度な性的アピールは不要。":"");
+  try{
+    const resp=await callAI(prompt,true);
+    const data=parseJSON(resp);
+    renderScentResult(data,'cycle-scent-area');
+  }catch(e){
+    showError('cycle-scent-area',e.message);
+  }
+  document.getElementById('cycle-scent-area').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ═══════════════════════════════════════════
+//  A-1: 接続確認（起動時ping）
+// ═══════════════════════════════════════════
+async function checkConnection(){
+  const dot=document.getElementById('conn-dot');
+  const txt=document.getElementById('conn-text');
+  try{
+    const r=await fetch(FUNCTIONS_BASE+'/askClaude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Access-Key':ACCESS_KEY},
+      body:JSON.stringify({prompt:'ping',model:'gemini-2.5-flash',useSearch:false})
+    });
+    if(r.ok){
+      dot.style.background='var(--sage)';
+      txt.textContent='Gemini 2.5 Flash 接続OK';
+      document.getElementById('conn-bar').style.borderColor='rgba(58,138,78,.3)';
+      document.getElementById('conn-bar').style.background='var(--sage-xl)';
+      document.getElementById('conn-bar').style.color='var(--sage)';
+    } else {
+      throw new Error(r.status);
+    }
+  }catch(e){
+    dot.style.background='var(--rose)';
+    txt.textContent='接続エラー — Firebase確認要';
+    document.getElementById('conn-bar').style.borderColor='rgba(194,84,122,.3)';
+    document.getElementById('conn-bar').style.background='var(--rose-xl)';
+    document.getElementById('conn-bar').style.color='var(--rose)';
+  }
+}
+
+// ═══════════════════════════════════════════
+//  A-2: マークダウン整形
+// ═══════════════════════════════════════════
+function renderMarkdown(text){
+  if(!text) return '';
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/^#{3}\s+(.+)$/gm,'<div style="font-family:var(--fu);font-size:11px;font-weight:800;color:var(--gold);letter-spacing:1px;margin:8px 0 3px;">$1</div>')
+    .replace(/^#{2}\s+(.+)$/gm,'<div style="font-family:var(--fu);font-size:13px;font-weight:900;color:var(--txt);margin:10px 0 4px;">$1</div>')
+    .replace(/^#{1}\s+(.+)$/gm,'<div style="font-family:var(--fu);font-size:15px;font-weight:900;color:var(--gold);margin:12px 0 5px;">$1</div>')
+    .replace(/^[-•]\s+(.+)$/gm,'<div style="padding:2px 0 2px 12px;position:relative;"><span style="position:absolute;left:0;color:var(--gold);">・</span>$1</div>')
+    .replace(/^(\d+)\.\s+(.+)$/gm,'<div style="padding:2px 0 2px 18px;position:relative;"><span style="position:absolute;left:0;color:var(--gold);font-family:var(--fu);font-weight:700;">$1.</span>$2</div>')
+    .replace(/\n\n/g,'<div style="height:6px;"></div>')
+    .replace(/\n/g,'<br>');
+}
+
+// ═══════════════════════════════════════════
+//  B-4: 今日のダッシュボード
+// ═══════════════════════════════════════════
+function buildDashboard(){
+  const area=document.getElementById('dashboard-area');
+  if(!area) return;
+  const now=new Date();
+  const hour=now.getHours();
+  const moon=moonPhase(now);
+  const season=['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][now.getMonth()];
+  const weekday=['日','月','火','水','木','金','土'][now.getDay()];
+
+  // T値推定（時刻から）
+  let tScore, tLabel, tColor;
+  if(hour>=6&&hour<=9){tScore=95;tLabel='最高値（朝のピーク）';tColor='var(--gold)';}
+  else if(hour>=10&&hour<=12){tScore=75;tLabel='高値（午前中）';tColor='var(--sage)';}
+  else if(hour>=13&&hour<=16){tScore=55;tLabel='中間値（午後）';tColor='var(--teal)';}
+  else if(hour>=17&&hour<=19){tScore=40;tLabel='低め（夕方）';tColor='var(--amb)';}
+  else if(hour>=20){tScore=30;tLabel='低値（夜間）';tColor='var(--txt3)';}
+  else{tScore=60;tLabel='回復中（深夜）';tColor='var(--vio)';}
+
+  // 周期フェーズ
+  let phaseHtml='';
+  if(cycleState.lastPeriod){
+    const adjLast=adjustedLastPeriod(cycleState.lastPeriod,cycleState.pattern||'none');
+    const cp=calcPhase(adjLast,cycleState.cycleLen,cycleState.periodLen,now);
+    const phDef=CYCLE_PHASES.find(p=>p.id===cp.phase)||CYCLE_PHASES[0];
+    phaseHtml='<div style="background:'+phDef.color+'15;border:1px solid '+phDef.color+'30;border-radius:9px;padding:8px 10px;margin-top:7px;display:flex;align-items:center;gap:8px;">'
+      +'<span style="font-size:20px;">'+phDef.emoji+'</span>'
+      +'<div><div style="font-family:var(--fu);font-size:10px;font-weight:800;color:'+phDef.color+';letter-spacing:1px;">'+phDef.name+'（周期'+cp.day+'日目）</div>'
+      +'<div style="font-size:9px;color:var(--txt2);margin-top:1px;">次の生理まで'+cp.daysToNextPeriod+'日'+(cp.daysToOvulation!==null?' / 排卵まで'+cp.daysToOvulation+'日':'')+'</div></div>'
+      +'</div>';
+  }
+
+  // 推奨香水ヒント
+  const tipMap={
+    6:'朝シャワー後が最適タイミング。T値ピーク×清潔な肌で香りが最大拡散。',
+    10:'午前中の商談・打合せ前に2プッシュ。サンダルウッド系が信頼感を演出。',
+    14:'昼後は体温が高い。1プッシュに減らして過剰放出を防ぐ。',
+    18:'夜のデート前2時間前に付けて完全ドライダウンを待つ。',
+    21:'夜間はT値低下中。軽いシトラス系1プッシュで十分。',
+  };
+  const tipHour=hour>=21?21:hour>=18?18:hour>=14?14:hour>=10?10:6;
+  const tip=tipMap[tipHour];
+
+  area.innerHTML='<div class="sec" style="margin:0 12px 10px;">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+    +'<div style="font-family:var(--fu);font-size:11px;font-weight:800;color:var(--txt);letter-spacing:.5px;">'+(now.getMonth()+1)+'月'+now.getDate()+'日（'+weekday+'）'+hour+'時 / '+season+' '+moon.emoji+moon.label+'</div>'
+    +'<button onclick="buildDashboard()" style="padding:3px 9px;background:var(--bg3);border:1px solid var(--bor2);border-radius:var(--rf);color:var(--txt3);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">↺ 更新</button>'
+    +'</div>'
+    // T値メーター
+    +'<div style="background:var(--bg3);border-radius:10px;padding:10px 12px;margin-bottom:8px;">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">'
+    +'<div style="font-family:var(--fu);font-size:9px;font-weight:700;color:var(--txt3);letter-spacing:1.5px;">⚡ テストステロン推定</div>'
+    +'<div style="font-family:var(--fu);font-size:16px;font-weight:900;color:'+tColor+';">'+tScore+'</div>'
+    +'</div>'
+    +'<div style="background:var(--sur);border-radius:var(--rf);height:8px;overflow:hidden;margin-bottom:4px;">'
+    +'<div style="width:'+tScore+'%;height:100%;background:linear-gradient(90deg,var(--gold),'+tColor+');border-radius:var(--rf);transition:width .6s ease;"></div>'
+    +'</div>'
+    +'<div style="font-size:9px;color:'+tColor+';font-weight:700;">'+tLabel+'</div>'
+    +'</div>'
+    // 周期フェーズ
+    +phaseHtml
+    // 今日のヒント
+    +'<div style="background:var(--gold-xl);border-left:3px solid var(--gold);border-radius:0 9px 9px 0;padding:8px 10px;margin-top:7px;">'
+    +'<div style="font-family:var(--fu);font-size:8px;font-weight:700;color:var(--gold);letter-spacing:1.5px;margin-bottom:3px;">✦ 今この時間の香水戦略</div>'
+    +'<div style="font-size:10px;color:var(--txt);line-height:1.75;">'+tip+'</div>'
+    +'</div>'
+    // ワンタップ今日の戦略
+    +'<button onclick="runAnalyze(\'full_strategy\')" style="width:100%;margin-top:9px;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border:none;border-radius:var(--r2);color:#fff;font-family:var(--fu);font-size:12px;font-weight:900;cursor:pointer;letter-spacing:1px;box-shadow:0 3px 14px rgba(184,130,10,.3);">🧬 今日の最強香水をAI選定</button>'
+    +'</div>';
+}
+
+// ═══════════════════════════════════════════
+//  A-3: マイ香水棚
+// ═══════════════════════════════════════════
+function saveScent(brand, name, rank, score){
+  // 重複チェック
+  const exists=historyData.some(h=>h.brand===brand&&h.name===name);
+  if(exists){ showCycleToast('既に保存済みです：'+name); return; }
+  historyData.unshift({
+    date:new Date().toLocaleDateString('ja'),
+    brand, name, rank, score,
+    pyramid:'', notes:'', owned:false
+  });
+  if(historyData.length>50) historyData=historyData.slice(0,50);
+  localStorage.setItem('gc_history',JSON.stringify(historyData));
+  renderHistory();
+  showCycleToast('💾 保存しました：'+name);
+}
+
+function renderHistory(){
+  const t=historyData.length;
+  const topScore=t>0?Math.max(...historyData.map(h=>h.score||0)):0;
+  document.getElementById('st-total').textContent=t;
+  document.getElementById('st-saved').textContent=historyData.filter(h=>h.rank==='S'||h.rank==='A').length;
+  document.getElementById('st-score').textContent=topScore||'-';
+  const list=document.getElementById('history-list');
+  if(t===0){
+    list.innerHTML='<div class="empty"><div class="empty-i">💾</div>保存した香水がここに表示されます</div>';
+    return;
+  }
+  list.innerHTML=historyData.map((h,i)=>{
+    const rankColor=h.rank==='S'?'var(--gold)':h.rank==='A'?'var(--rose)':'var(--teal)';
+    return '<div class="hist-row" id="hr-'+i+'">'
+      +'<span class="hr-res hr-good">'+( h.rank||'B')+'</span>'
+      +'<div class="hr-info">'
+      +'<div class="hr-name">'+h.brand+' '+h.name+'</div>'
+      +'<div class="hr-meta">'+h.date+(h.owned?' ✅所持':'')+'</div>'
+      +'</div>'
+      +'<span class="hr-rank" style="color:'+rankColor+';">'+(h.score||0)+'pt</span>'
+      +'<button data-action="toggle-owned" data-idx="'+i+'" style="background:none;border:none;font-size:14px;cursor:pointer;padding:3px;" title="所持切替">'+(h.owned?'✅':'⬜')+'</button>'
+      +'<button data-action="del-hist" data-idx="'+i+'" style="background:none;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:3px;">✕</button>'
+      +'</div>';
+  }).join('');
+}
+
+function delHistory(i){
+  historyData.splice(i,1);
+  localStorage.setItem('gc_history',JSON.stringify(historyData));
+  renderHistory();
+}
+
+// ═══════════════════════════════════════════
+//  B-5: 香水比較モード
+// ═══════════════════════════════════════════
+let compareList=[];
+
+function addToCompare(brand, name, rank, score){
+  if(compareList.length>=3){ showCycleToast('比較は最大3本まで'); return; }
+  if(compareList.some(c=>c.brand===brand&&c.name===name)){ showCycleToast('既に比較リストにあります'); return; }
+  compareList.push({brand,name,rank,score});
+  showCycleToast('比較に追加：'+name+' ('+compareList.length+'/3)');
+  renderCompareBar();
+}
+
+function renderCompareBar(){
+  let bar=document.getElementById('compare-bar');
+  if(!bar){
+    bar=document.createElement('div');
+    bar.id='compare-bar';
+    bar.style.cssText='position:fixed;bottom:70px;left:0;right:0;z-index:999;padding:0 12px;pointer-events:none;';
+    document.body.appendChild(bar);
+  }
+  if(compareList.length===0){ bar.innerHTML=''; return; }
+  bar.style.pointerEvents='auto';
+  bar.innerHTML='<div style="background:linear-gradient(135deg,var(--sur),var(--bg3));border:1.5px solid var(--bor2);border-radius:var(--r2);padding:10px 12px;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px;">'
+    +'<div style="flex:1;font-family:var(--fu);font-size:10px;font-weight:800;color:var(--txt);letter-spacing:.5px;">📊 比較中 '+compareList.length+'/3：'
+    +compareList.map(c=>c.name).join(' vs ')+'</div>'
+    +(compareList.length>=2?'<button onclick="runCompare()" style="padding:7px 12px;background:linear-gradient(135deg,var(--vio),#a07ae0);border:none;border-radius:9px;color:#fff;font-family:var(--fu);font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;">AI比較</button>':'')
+    +'<button onclick="compareList=[];renderCompareBar();" style="padding:7px 10px;background:var(--rose-xl);border:1px solid rgba(194,84,122,.2);border-radius:9px;color:var(--rose);font-family:var(--fu);font-size:10px;font-weight:700;cursor:pointer;">✕</button>'
+    +'</div>';
+}
+
+async function runCompare(){
+  if(compareList.length<2){ showCycleToast('2本以上選んでください'); return; }
+  showPage('history');
+  const area=document.getElementById('insight-area');
+  area.innerHTML='<div class="loading-card"><div class="loading-orb">📊</div><div class="loading-text">Gemini 2.5 Flashで香水を比較分析中...</div></div>';
+  const items=compareList.map(c=>c.brand+' '+c.name).join(' / ');
+  const now=new Date();
+  const season=['冬','冬','春','春','春','夏','夏','夏','秋','秋','秋','冬'][now.getMonth()];
+  const prompt='以下の香水を比較分析してください：'+items+'\n'
+    +'比較項目：①香調の違い ②シーン適合性 ③MHC・テストステロンへの効果 ④今日（'+season+'）に最も合う1本の推奨理由\n'
+    +'200字程度で簡潔に日本語で回答。';
+  try{
+    const resp=await callAI(prompt,true);
+    const sid=_s(resp,'香水比較 '+items,'insight-area');
+    area.innerHTML='<div class="insight-card">'
+      +'<div class="ins-lbl">📊 AI香水比較分析 — '+items+'</div>'
+      +'<div style="font-size:11px;line-height:1.85;">'+renderMarkdown(resp)+'</div>'
+      +'<div style="display:flex;gap:5px;margin-top:9px;">'
+      +'<button data-sid="'+sid+'" data-action="copy" style="flex:1;padding:6px;border-radius:8px;background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋 コピー</button>'
+      +'<button data-sid="'+sid+'" data-action="deep" style="flex:1;padding:6px;border-radius:8px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">🔬 深堀り</button>'
+      +'</div>'
+      +'</div>';
+  }catch(e){
+    area.innerHTML='<div class="sec"><div style="color:var(--rose);font-size:11px;">⚠️ '+e.message+'</div></div>';
+  }
+  compareList=[];
+  renderCompareBar();
+}
+
+// deepDive関数にマークダウン適用
+async function deepDive(srcText, areaId){
+  const area=document.getElementById(areaId);
+  if(!area) return;
+  const divId='deepdive-'+Date.now();
+  const div=document.createElement('div');
+  div.id=divId;
+  div.style.cssText='margin:0 12px 10px;';
+  div.innerHTML='<div class="loading-card"><div class="loading-orb">🔬</div><div class="loading-text">Gemini 2.5 Flashで深堀り解析中...</div></div>';
+  area.appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const prompt='以下の香水情報をさらに深堀りして詳細解説してください。\n【元情報】'+srcText+'\n'
+    +'①詳細香料分子と神経科学的効果 ②日本国内購入場所・価格（最新をGoogle検索で確認）③類似香水・代替品 ④男性が使う場合の具体的戦略\n200字程度で回答。';
+  try{
+    const resp=await callAI(prompt,true);
+    const did=_s(resp,srcText.substring(0,40)+' 購入 価格',areaId);
+    div.innerHTML='<div class="sec" style="border-color:rgba(14,143,160,.3);">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
+      +'<div style="font-family:var(--fu);font-size:9px;font-weight:700;letter-spacing:2px;color:var(--teal);">🔬 DEEP DIVE</div>'
+      +'<button data-sid="'+did+'" data-action="copy" style="padding:3px 9px;border-radius:var(--rf);background:var(--bg3);border:1px solid var(--bor2);color:var(--txt2);font-family:var(--fu);font-size:9px;font-weight:700;cursor:pointer;">📋 コピー</button>'
+      +'</div>'
+      +'<div style="font-size:11px;color:var(--txt);line-height:1.85;">'+renderMarkdown(resp)+'</div>'
+      +'<div style="display:flex;gap:5px;margin-top:9px;">'
+      +'<button data-sid="'+did+'" data-action="google" style="flex:1;padding:7px 8px;border-radius:9px;background:var(--gold-xl);border:1px solid rgba(184,130,10,.25);color:var(--gold);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔍 Google検索</button>'
+      +'<button data-sid="'+did+'" data-action="deep" style="flex:1;padding:7px 8px;border-radius:9px;background:var(--teal-xl);border:1px solid rgba(14,143,160,.2);color:var(--teal);font-family:var(--fu);font-size:9px;font-weight:800;cursor:pointer;">🔬 さらに深堀り</button>'
+      +'</div></div>';
+  }catch(e){
+    div.innerHTML='<div class="sec"><div style="color:var(--rose);font-size:11px;">⚠️ '+e.message+'</div></div>';
+  }
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+function init(){
+  renderHistory();
+  buildDashboard();
+  checkConnection();
+  // ─── グローバルイベント委譲 ───
+  document.addEventListener('click', e=>{
+    const btn=e.target.closest('[data-action]');
+    if(!btn)return;
+    const a=btn.dataset.action;
+    const sid=btn.dataset.sid;
+    const idx=parseInt(btn.dataset.idx);
+    if(a==='copy'&&sid)  copyByStore(sid,btn);
+    else if(a==='google'&&sid) googleByStore(sid);
+    else if(a==='deep'&&sid)   deepByStore(sid);
+    else if(a==='save') saveScent(btn.dataset.brand||'',btn.dataset.name||'',btn.dataset.rank||'B',parseInt(btn.dataset.score)||0);
+    else if(a==='compare') addToCompare(btn.dataset.brand||'',btn.dataset.name||'',btn.dataset.rank||'B',parseInt(btn.dataset.score)||0);
+    else if(a==='set-cycle') setCycleSync(btn.dataset.date,parseInt(btn.dataset.len)||28,btn.dataset.label||'');
+    else if(a==='set-pat')  setCyclePattern(btn.dataset.pat||'none');
+    else if(a==='set-view') setCycleView(btn.dataset.view||'menstrual');
+    else if(a==='cycle-scent') runCycleScentAI(btn.dataset.phase||'follicular',btn.dataset.pname||'',btn.dataset.patname||'');
+    else if(a==='deep-scent') deepDive(btn.dataset.query||'',btn.dataset.area||'result-main');
+    else if(a==='del-hist'&&!isNaN(idx)){ delHistory(idx); }
+    else if(a==='toggle-owned'&&!isNaN(idx)){
+      if(historyData[idx]){ historyData[idx].owned=!historyData[idx].owned; localStorage.setItem('gc_history',JSON.stringify(historyData)); renderHistory(); }
+    }
+    else if(a==='neuro-tab') switchNeuroTab(btn.dataset.tab||'map');
+    else if(a==='neuro-coach-direct'){
+      const hint=btn.dataset.hint||'';
+      const si=document.getElementById('coach-situation');
+      if(si) si.value=hint;
+      switchNeuroTab('coach');
+    }
+  });
+}
+init();
+</script>
+</body>
+</html>
